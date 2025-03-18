@@ -1,0 +1,4 @@
+mongodb:
+  uri: mongodb+srv://genai:<db_password>@diy-doctor.b82as.mongodb.net/?appName=DIY-Doctor
+  username: genai
+  password: genai123

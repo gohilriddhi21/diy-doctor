@@ -8,5 +8,8 @@ if st.button("Provide suggestion", use_container_width=True):
     st.session_state["advice"] = generate_response(query)
 
 if "advice" in st.session_state:
-    st.markdown("### Suggestions:")
+    st.success("### Suggestions:")
+    # st.markdown("### Suggestions:")
     st.text_area("Advice:", st.session_state["advice"], height=200)
+else:
+    st.warning("Please ask a question to get suggestions.")

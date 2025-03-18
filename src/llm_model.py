@@ -1,6 +1,6 @@
-# Some code
+from judge_llm import verify_suggestions
 
 def generate_response(query):
     if query:
-        return "test response"
+        verify_suggestions("test response")
     return None

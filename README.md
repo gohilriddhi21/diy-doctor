@@ -13,5 +13,5 @@ An innovative application designed to streamline medical verification and provid
 ## Getting Started
 1. Clone the repository:
    ```bash
-   git clone 
+   git clone git@github.com:gohilriddhi21/diy-doctor.git
    ```

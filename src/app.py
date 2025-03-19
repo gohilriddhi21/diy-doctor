@@ -1,15 +1,27 @@
 import streamlit as st
 from llm_model import generate_response
 
-# ✅ Streamlit App UI
-st.title("Hello, I am your DIY-Doctor")
-query = st.text_input("Ask your questions:")
-if st.button("Provide suggestion", use_container_width=True):
-    st.session_state["advice"] = generate_response(query)
+def main():
+    st.set_page_config(page_title="DIY Doctor", page_icon="🩺")
+    st.title("🩺 DIY Doctor: AI-Powered Medical Verification")
+    
+    st.write("Enter your query below to receive verified medical guidance.")
+    
+    query = st.text_area("Your Medical Query:")
+    
+    if st.button("Submit"):
+        if query.strip():
+            output = generate_response(query)  
+            if output:
+                st.success(output)
+            else:
+                st.error("No relevant information found. Please consult a professional.")
+        else:
+            st.warning("Please enter a query before submitting.")
+    with st.sidebar:
+        st.header("About DIY Doctor")
+        st.write("""DIY Doctor utilizes OCR and AI to verify medical advice based on user data. Ensure to consult a professional for final verification.""")
+        st.markdown("**Contact: support@diydoctor.com**")
 
-if "advice" in st.session_state:
-    st.success("### Suggestions:")
-    # st.markdown("### Suggestions:")
-    st.text_area("Advice:", st.session_state["advice"], height=200)
-else:
-    st.warning("Please ask a question to get suggestions.")
+if __name__ == "__main__":
+    main()

@@ -1,9 +1,10 @@
 # David Treadwell
 # CS 7180 - Generative AI
 # treadwell.d@northeastern.edu
+# node_manager.py - Contains a class to manage nodes representing a document
 
 import time
-from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, Settings
+from llama_index.core import SimpleDirectoryReader
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 import tabula
 from llama_index.core import Document

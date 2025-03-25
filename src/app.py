@@ -2,10 +2,10 @@ import streamlit as st
 from node_manager import NodeManager
 from llm_model import QueryEngine
 from dotenv import load_dotenv
-import openai
 import os
 
 def main():
+    load_dotenv()
     st.set_page_config(page_title="DIY Doctor", page_icon="🩺")
     st.title("🩺 DIY Doctor: AI-Powered Medical Verification")
     

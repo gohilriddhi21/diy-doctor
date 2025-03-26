@@ -40,6 +40,9 @@ class QueryEngine:
 
         # Set LLM
         api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
+            raise ValueError("Missing OpenRouter API key. "
+                             "Set the 'OPENROUTER_API_KEY' environment variable in your \'.env\' file.")
         self._llm = OpenRouter(api_key=api_key, model="mistralai/mistral-7b-instruct", max_tokens=512, context_window=4096)
 
         # Put embedding model and LLM in settings
@@ -60,10 +63,13 @@ class QueryEngine:
         """
         Generates a response to a query without additional information
         :param query: The query to use in querying the engine
-        :return: The query response as a String
+        :return: The query response as a String, or a message that no query was passed
         """
-        response_obj = self._query_engine.query(query)
-        response_text = response_obj.response
+        if query:
+            response_obj = self._query_engine.query(query)
+            response_text = response_obj.response
+        else:
+            response_text = "No query provided! Please enter a query and try again."
         return response_text
 
     def set_nodes_and_retrievers(self, nodes):

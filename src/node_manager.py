@@ -55,18 +55,31 @@ class NodeManager:
         """
         base_documents = SimpleDirectoryReader(input_files=[self._document_path]).load_data()
         document_from_tables = self._get_table_documents()
-        return base_documents + [document_from_tables]  # TODO should OSR also be included?
+
+        # Return only base documents if no documents from tables were found, otherwise return both
+        if document_from_tables is None:
+            return base_documents
+        else:
+            return base_documents + [document_from_tables]  # TODO should OSR also be included?
 
     def _get_table_documents(self):
         """
         Extracts documents from table data in the document passed in
         :return: A single document containing the table data contained in a document
         """
+        # Read PDF
         tables = tabula.read_pdf(self._document_path, pages="all")
-        table_docs = [df.to_markdown(index=False) for df in tables]
-        all_tables_text = "\n\n".join(table_docs)
-        document_from_tables = Document(text=all_tables_text)
-        return document_from_tables
+
+        # If no tables are found, return None directly
+        if tables is None:
+            return None
+
+        # If tables are found, extract documents from them and return them
+        else:
+            table_docs = [df.to_markdown(index=False) for df in tables]
+            all_tables_text = "\n\n".join(table_docs)
+            document_from_tables = Document(text=all_tables_text)
+            return document_from_tables
 
     def _set_ingestion_pipeline(self, breakpoint_percentile_threshold=85):
         """

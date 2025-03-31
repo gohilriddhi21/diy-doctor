@@ -7,6 +7,7 @@
 from abc import ABC, abstractmethod
 from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 
+
 class JudgeLLMBase(ABC):
     """
     Parent class to provide shared functionality to child judge LLM classes that provide specific implementations

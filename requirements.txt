@@ -1,3 +1,16 @@
 pymongo
 pyyaml
 streamlit
+dotenv
+huggingface-hub
+llama-index
+transformers
+sentence-transformers
+llama-index-llms-huggingface
+llama-index-embeddings-huggingface
+pdfplumber
+llama-index-llms-openrouter
+llama-index-retrievers-bm25
+tabula
+jpype1
+pystemmer

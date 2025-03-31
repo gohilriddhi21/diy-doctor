@@ -18,7 +18,8 @@ class QueryEngine:
     """
     Class to manage base queries and responses
     """
-    def __init__(self, nodes=None, embed_model_name="sentence-transformers/all-MiniLM-L6-v2"):
+    def __init__(self, nodes=None, embed_model_name="sentence-transformers/all-MiniLM-L6-v2",
+                 llm_name="mistralai/mistral-7b-instruct"):
         # Set defaults for variables necessary to generate retrievals
         # Set index and nodes
         self._nodes = nodes
@@ -42,7 +43,7 @@ class QueryEngine:
         if not api_key:
             raise ValueError("Missing OpenRouter API key. "
                              "Set the 'OPENROUTER_API_KEY' environment variable in your \'.env\' file.")
-        self._llm = OpenRouter(api_key=api_key, model="mistralai/mistral-7b-instruct", max_tokens=512, context_window=4096)
+        self._llm = OpenRouter(api_key=api_key, model=llm_name, max_tokens=512, context_window=4096)
 
         # Put embedding model and LLM in settings
         # TODO really would rather parameterize this somewhere, but for now this works

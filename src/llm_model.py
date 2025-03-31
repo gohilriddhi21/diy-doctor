@@ -64,12 +64,22 @@ class QueryEngine:
         :param query: The query to use in querying the engine
         :return: The query response as a String, or a message that no query was passed
         """
+        response = self.generate_full_response(query)
+        if query:
+            response = response.response  # Extracts just the text response if a query was returned
+        return response
+
+    def generate_full_response(self, query):
+        """
+        Generates a response to a query with all additional information provided by engine
+        :param query: The query to use in querying the engine
+        :return: The query response object
+        """
         if query:
             response_obj = self._query_engine.query(query)
-            response_text = response_obj.response
         else:
-            response_text = "No query provided! Please enter a query and try again."
-        return response_text
+            response_obj = "No query provided! Please enter a query and try again."
+        return response_obj
 
     def set_nodes_and_retrievers(self, nodes):
         """
@@ -102,6 +112,13 @@ class QueryEngine:
                   "auto_merging\n"
                   "bm25\n"
                   "fusion\n")
+
+    def get_llm(self):
+        """
+        Returns the LLM being used by the Query Engine
+        :return: LLM model
+        """
+        return self._llm
 
     def _set_retrievers(self):
         """

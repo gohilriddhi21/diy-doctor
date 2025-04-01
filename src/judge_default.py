@@ -58,13 +58,14 @@ class JudgeDefault(JudgeLLMBase, ABC):
         relevancy_score = relevancy_evaluator.evaluate_response(query=query, response=response_obj)
         return relevancy_score.score
 
-    def verify_suggestions(self, query, response_obj):
+    def verify_suggestions(self, query, response_obj, verbose=False):
         """
         Verifies the faithfulness/relevancy of a response and provides a level of certainty
         :param query:        The original query used to generate a response
         :param response_obj: The response to the query
+        :param verbose:      Whether to print scores or not
         :return: The verification level of the query
         """
         faithfulness = self.evaluate_faithfulness(response_obj)
         relevancy = self.evaluate_relevancy(query, response_obj)
-        return self._verification_response(faithfulness, relevancy)
+        return self._verification_response(faithfulness, relevancy, verbose)

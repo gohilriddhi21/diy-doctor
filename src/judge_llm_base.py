@@ -49,15 +49,30 @@ class JudgeLLMBase(ABC):
         """
         pass
 
-    def _verification_response(self, faithfulness_score, relevancy_score):
+    def _print_verbose_scores(self, faithfulness_score, relevancy_score):
+        """
+        Prints faithfulness and relevancy scores
+        :param faithfulness_score: The faithfulness score
+        :param relevancy_score:    The relevancy score
+        :return: None
+        """
+        print("Faithfulness: {}".format(faithfulness_score))
+        print("Relevancy: {}".format(relevancy_score))
+
+    def _verification_response(self, faithfulness_score, relevancy_score, verbose=False):
         """
         Returns a response depending on the faithfulness/relevancy of a response
         :param faithfulness_score: The faithfulness score (0.0 or 1.0)
         :param relevancy_score:    The relevancy score (0.0 or 1.0)
+        :param verbose:            Whether to print scores or not
         :return: The verification level of the response
         """
         # Get the evaluation scores
         full_score = faithfulness_score + relevancy_score
+
+        # Prints if verbose
+        if verbose:
+            self._print_verbose_scores(faithfulness_score, relevancy_score)
 
         # Return context of success
         # TODO should the score be handled elsewhere?

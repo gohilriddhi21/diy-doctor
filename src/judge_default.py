@@ -9,6 +9,7 @@ from src.judge_llm_base import JudgeLLMBase
 from dotenv import load_dotenv
 import os
 from llama_index.llms.openrouter import OpenRouter
+from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 
 
 class JudgeDefault(JudgeLLMBase, ABC):
@@ -29,3 +30,41 @@ class JudgeDefault(JudgeLLMBase, ABC):
         self.judge_llm = OpenRouter(api_key=api_key, model=self.model_name,
                                     max_tokens=self.max_tokens,
                                     context_window=self.context_window)
+
+    def evaluate_faithfulness(self, response_obj):
+        """
+        Evaluates how faithful a response to a query was
+        :param response_obj: The full response object to evaluate
+        :return: The faithfulness score
+        """
+        # Set up evaluators
+        faithfulness_evaluator = FaithfulnessEvaluator(llm=self.judge_llm)
+
+        # Evaluate for each score
+        faithfulness_score = faithfulness_evaluator.evaluate_response(response=response_obj)
+        return faithfulness_score.score
+
+    def evaluate_relevancy(self, query, response_obj):
+        """
+        Evaluates how faithful a response to a query was
+        :param query:        The original query used to generate the response
+        :param response_obj: The full response object to evaluate
+        :return: The relevancy score
+        """
+        # Set up evaluators
+        relevancy_evaluator = RelevancyEvaluator(llm=self.judge_llm)
+
+        # Evaluate for each score
+        relevancy_score = relevancy_evaluator.evaluate_response(query=query, response=response_obj)
+        return relevancy_score.score
+
+    def verify_suggestions(self, query, response_obj):
+        """
+        Verifies the faithfulness/relevancy of a response and provides a level of certainty
+        :param query:        The original query used to generate a response
+        :param response_obj: The response to the query
+        :return: The verification level of the query
+        """
+        faithfulness = self.evaluate_faithfulness(response_obj)
+        relevancy = self.evaluate_relevancy(query, response_obj)
+        return self._verification_response(faithfulness, relevancy)

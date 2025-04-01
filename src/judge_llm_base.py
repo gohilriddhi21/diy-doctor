@@ -5,7 +5,6 @@
 
 
 from abc import ABC, abstractmethod
-from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 
 
 class JudgeLLMBase(ABC):
@@ -22,50 +21,46 @@ class JudgeLLMBase(ABC):
     def initialize_judge_llm(self):
         pass
 
-    def evaluate_faitfulness(self, judge_llm, response_obj):
+    @abstractmethod
+    def evaluate_faithfulness(self, response_obj):
         """
         Evaluates how faithful a response to a query was
-        :param judge_llm:    The LLM to use to evaluate faithfulness
         :param response_obj: The full response object to evaluate
         :return: The faithfulness score
         """
-        # Set up evaluators
-        faithfulness_evaluator = FaithfulnessEvaluator(llm=judge_llm)
+        pass
 
-        # Evaluate for each score
-        faithfulness_score = faithfulness_evaluator.evaluate_response(response=response_obj)
-        return faithfulness_score.score
-
-    def evaluate_relevancy(self, judge_llm, query, response_obj):
+    @abstractmethod
+    def evaluate_relevancy(self, query, response_obj):
         """
         Evaluates how faithful a response to a query was
-        :param judge_llm:    The LLM to use to evaluate relevancy
         :param query:        The original query used to generate the response
         :param response_obj: The full response object to evaluate
         :return: The relevancy score
         """
-        # Set up evaluators
-        relevancy_evaluator = RelevancyEvaluator(llm=judge_llm)
+        pass
 
-        # Evaluate for each score
-        relevancy_score = relevancy_evaluator.evaluate_response(query=query, response=response_obj)
-        return relevancy_score.score
-
-    def verify_suggestions(self, judge_llm, query, response_obj):
+    def verify_suggestions(self, query, response_obj):
         """
-        Evaluates how faithful a response to a query was
-        :param judge_llm:    The LLM to use to evaluate relevancy
-        :param query:        The original query used to generate the response
-        :param response_obj: The full response object to evaluate
-        :return: The relevancy score
+        Verifies the faithfulness/relevancy of a response and provides a level of certainty
+        :param query:        The original query used to generate a response
+        :param response_obj: The response to the query
+        :return: The verification level of the query
+        """
+        pass
+
+    def _verification_response(self, faithfulness_score, relevancy_score):
+        """
+        Returns a response depending on the faithfulness/relevancy of a response
+        :param faithfulness_score: The faithfulness score (0.0 or 1.0)
+        :param relevancy_score:    The relevancy score (0.0 or 1.0)
+        :return: The verification level of the response
         """
         # Get the evaluation scores
-        faithfulness = self.evaluate_faitfulness(judge_llm, response_obj)
-        relevancy = self.evaluate_relevancy(judge_llm, query, response_obj)
-        full_score = faithfulness + relevancy
+        full_score = faithfulness_score + relevancy_score
 
         # Return context of success
-        # TODO should the score be handled elsewhere
+        # TODO should the score be handled elsewhere?
         if full_score == 2.0:
             return "GOOD"
         elif full_score == 1.0:

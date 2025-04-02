@@ -12,14 +12,14 @@ from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.openrouter import OpenRouter
 import os
-import openai
 
 
 class QueryEngine:
     """
     Class to manage base queries and responses
     """
-    def __init__(self, nodes=None, embed_model_name="sentence-transformers/all-MiniLM-L6-v2"):
+    def __init__(self, nodes=None, embed_model_name="sentence-transformers/all-MiniLM-L6-v2",
+                 llm_name="mistralai/mistral-7b-instruct"):
         # Set defaults for variables necessary to generate retrievals
         # Set index and nodes
         self._nodes = nodes
@@ -43,7 +43,7 @@ class QueryEngine:
         if not api_key:
             raise ValueError("Missing OpenRouter API key. "
                              "Set the 'OPENROUTER_API_KEY' environment variable in your \'.env\' file.")
-        self._llm = OpenRouter(api_key=api_key, model="mistralai/mistral-7b-instruct", max_tokens=512, context_window=4096)
+        self._llm = OpenRouter(api_key=api_key, model=llm_name, max_tokens=512, context_window=4096)
 
         # Put embedding model and LLM in settings
         # TODO really would rather parameterize this somewhere, but for now this works
@@ -65,12 +65,22 @@ class QueryEngine:
         :param query: The query to use in querying the engine
         :return: The query response as a String, or a message that no query was passed
         """
+        response = self.generate_full_response(query)
+        if query:
+            response = response.response  # Extracts just the text response if a query was returned
+        return response
+
+    def generate_full_response(self, query):
+        """
+        Generates a response to a query with all additional information provided by engine
+        :param query: The query to use in querying the engine
+        :return: The query response object
+        """
         if query:
             response_obj = self._query_engine.query(query)
-            response_text = response_obj.response
         else:
-            response_text = "No query provided! Please enter a query and try again."
-        return response_text
+            response_obj = "No query provided! Please enter a query and try again."
+        return response_obj
 
     def set_nodes_and_retrievers(self, nodes):
         """
@@ -103,6 +113,13 @@ class QueryEngine:
                   "auto_merging\n"
                   "bm25\n"
                   "fusion\n")
+
+    def get_llm(self):
+        """
+        Returns the LLM being used by the Query Engine
+        :return: LLM model
+        """
+        return self._llm
 
     def _set_retrievers(self):
         """

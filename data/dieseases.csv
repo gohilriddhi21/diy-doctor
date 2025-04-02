@@ -1,0 +1,350 @@
+ID,Disease,Fever,Cough,Fatigue,Difficulty_Breathing
+1,Influenza,Yes,No,Yes,Yes
+2,Common Cold,No,Yes,Yes,No
+3,Eczema,No,Yes,Yes,No
+4,Asthma,Yes,Yes,No,Yes
+5,Asthma,Yes,Yes,No,Yes
+6,Eczema,Yes,No,No,No
+7,Influenza,Yes,Yes,Yes,Yes
+8,Influenza,Yes,Yes,Yes,Yes
+9,Hyperthyroidism,No,Yes,No,No
+10,Hyperthyroidism,No,Yes,No,No
+11,Asthma,Yes,No,No,Yes
+12,Allergic Rhinitis,No,Yes,Yes,No
+13,Anxiety Disorders,No,Yes,No,No
+14,Common Cold,No,No,No,No
+15,Diabetes,No,No,No,No
+16,Gastroenteritis,No,Yes,No,No
+17,Pancreatitis,Yes,No,No,No
+18,Rheumatoid Arthritis,No,Yes,Yes,Yes
+19,Depression,Yes,Yes,Yes,Yes
+20,Liver Cancer,Yes,Yes,Yes,Yes
+21,Stroke,Yes,Yes,Yes,Yes
+22,Urinary Tract Infection,Yes,Yes,Yes,No
+23,Dengue Fever,Yes,No,Yes,No
+24,Dengue Fever,Yes,No,Yes,No
+25,Eczema,No,Yes,Yes,No
+26,Gastroenteritis,Yes,Yes,Yes,No
+27,Hepatitis,Yes,Yes,Yes,Yes
+28,Kidney Cancer,No,No,Yes,No
+29,Migraine,Yes,No,No,No
+30,Migraine,No,Yes,Yes,No
+31,Muscular Dystrophy,No,No,Yes,No
+32,Sinusitis,No,Yes,Yes,No
+33,Ulcerative Colitis,Yes,Yes,No,No
+34,Ulcerative Colitis,No,Yes,Yes,No
+35,Asthma,Yes,Yes,No,Yes
+36,Asthma,Yes,Yes,No,Yes
+37,Asthma,Yes,Yes,Yes,Yes
+38,Bipolar Disorder,No,No,Yes,No
+39,Bronchitis,Yes,Yes,No,Yes
+40,Bronchitis,Yes,Yes,Yes,Yes
+41,Bronchitis,Yes,Yes,Yes,Yes
+42,Cerebral Palsy,No,No,Yes,Yes
+43,Colorectal Cancer,No,No,Yes,No
+44,Eczema,Yes,No,No,No
+45,Hypertensive Heart Disease,No,No,Yes,No
+46,Influenza,Yes,Yes,Yes,No
+47,Influenza,Yes,Yes,Yes,Yes
+48,Multiple Sclerosis,No,No,Yes,No
+49,Myocardial Infarction (Heart...,Yes,Yes,Yes,Yes
+50,Urinary Tract Infection (UTI),Yes,No,No,No
+51,Asthma,No,No,No,Yes
+52,Osteoporosis,No,No,No,Yes
+53,Common Cold,Yes,No,Yes,Yes
+54,Migraine,Yes,No,No,No
+55,Pneumonia,Yes,No,Yes,Yes
+56,Allergic Rhinitis,No,No,Yes,No
+57,Asthma,No,Yes,Yes,Yes
+58,Asthma,Yes,Yes,Yes,Yes
+59,Asthma,No,Yes,Yes,Yes
+60,Asthma,No,Yes,Yes,Yes
+61,Atherosclerosis,No,No,Yes,No
+62,Chronic Obstructive Pulmonary...,Yes,Yes,Yes,Yes
+63,Common Cold,Yes,Yes,Yes,No
+64,Eczema,No,Yes,No,No
+65,Epilepsy,No,No,Yes,No
+66,Hypertension,Yes,Yes,Yes,No
+67,Hyperthyroidism,Yes,Yes,Yes,No
+68,Obsessive-Compulsive Disorde...,No,No,Yes,No
+69,Pneumonia,Yes,Yes,Yes,Yes
+70,Pneumonia,Yes,Yes,Yes,Yes
+71,Psoriasis,Yes,No,No,No
+72,Psoriasis,No,Yes,Yes,No
+73,Rubella,Yes,No,Yes,No
+74,Rubella,Yes,No,Yes,No
+75,Urinary Tract Infection (UTI),No,Yes,Yes,No
+76,Asthma,Yes,Yes,No,Yes
+77,Asthma,Yes,Yes,No,Yes
+78,Cirrhosis,No,No,Yes,No
+79,Conjunctivitis (Pink Eye),No,Yes,No,No
+80,Depression,No,No,Yes,No
+81,Gastroenteritis,Yes,No,Yes,Yes
+82,Hyperthyroidism,Yes,Yes,Yes,No
+83,Hyperthyroidism,Yes,Yes,Yes,No
+84,Kidney Cancer,No,No,Yes,No
+85,Liver Cancer,No,No,Yes,No
+86,Liver Disease,No,No,Yes,No
+87,Malaria,Yes,No,No,No
+88,Malaria,Yes,No,No,No
+89,Migraine,No,Yes,Yes,No
+90,Migraine,Yes,No,No,No
+91,Pancreatitis,No,No,Yes,No
+92,Rheumatoid Arthritis,Yes,Yes,Yes,No
+93,Rheumatoid Arthritis,No,No,Yes,No
+94,Spina Bifida,No,No,Yes,No
+95,Ulcerative Colitis,No,No,Yes,No
+96,Ulcerative Colitis,Yes,No,No,No
+97,Urinary Tract Infection,Yes,No,Yes,No
+98,Allergic Rhinitis,No,Yes,No,No
+99,Depression,No,No,No,No
+100,Gastroenteritis,No,No,No,No
+101,Influenza,No,No,No,No
+102,Kidney Disease,No,No,Yes,No
+103,Liver Cancer,Yes,Yes,No,No
+104,Liver Disease,No,Yes,No,Yes
+105,Osteoporosis,No,Yes,No,No
+106,Stroke,Yes,Yes,No,No
+107,Anxiety Disorders,Yes,No,Yes,Yes
+108,Diabetes,Yes,No,Yes,Yes
+109,Migraine,Yes,Yes,No,No
+110,Osteoarthritis,Yes,Yes,Yes,No
+111,Pneumonia,Yes,Yes,Yes,Yes
+112,Klinefelter Syndrome,No,No,Yes,No
+113,Acne,No,No,Yes,No
+114,Brain Tumor,No,No,Yes,No
+115,Bronchitis,No,Yes,No,Yes
+116,Cystic Fibrosis,No,No,Yes,Yes
+117,Diabetes,Yes,No,No,No
+118,Glaucoma,No,No,Yes,No
+119,Osteoarthritis,No,No,Yes,No
+120,Rabies,Yes,Yes,No,No
+121,Rabies,Yes,Yes,No,No
+122,Asthma,Yes,No,Yes,No
+123,Asthma,Yes,Yes,No,Yes
+124,Asthma,Yes,Yes,No,Yes
+125,Asthma,No,No,Yes,Yes
+126,Asthma,Yes,No,Yes,Yes
+127,Asthma,Yes,No,Yes,Yes
+128,Chickenpox,No,Yes,No,No
+129,Chickenpox,No,Yes,No,No
+130,Coronary Artery Disease,No,No,Yes,No
+131,"Eating Disorders (Anorexia,...",No,No,Yes,No
+132,Fibromyalgia,No,No,Yes,No
+133,Gastroenteritis,Yes,Yes,Yes,No
+134,Hemophilia,No,No,Yes,No
+135,Hyperthyroidism,No,No,Yes,No
+136,Hypoglycemia,No,No,Yes,No
+137,Lymphoma,No,Yes,No,No
+138,Pneumonia,Yes,Yes,Yes,Yes
+139,Psoriasis,No,Yes,Yes,No
+140,Psoriasis,Yes,No,No,No
+141,Psoriasis,No,Yes,No,No
+142,Tuberculosis,Yes,Yes,Yes,Yes
+143,Tuberculosis,Yes,Yes,Yes,Yes
+144,Anxiety Disorders,No,No,No,No
+145,Common Cold,Yes,Yes,No,No
+146,Depression,Yes,No,No,Yes
+147,Influenza,No,Yes,No,No
+148,Kidney Cancer,Yes,No,No,No
+149,Liver Cancer,Yes,No,Yes,Yes
+150,Liver Disease,Yes,No,No,Yes
+151,Lung Cancer,Yes,No,Yes,Yes
+152,Migraine,Yes,Yes,Yes,No
+153,Osteoarthritis,No,No,Yes,No
+154,Stroke,Yes,No,Yes,No
+155,Urinary Tract Infection,No,Yes,Yes,Yes
+156,Diabetes,Yes,Yes,Yes,No
+157,Hypothyroidism,Yes,Yes,Yes,No
+158,Hypothyroidism,Yes,Yes,Yes,No
+159,Kidney Disease,Yes,No,Yes,No
+160,Pneumonia,No,Yes,Yes,Yes
+161,Allergic Rhinitis,No,Yes,Yes,No
+162,Autism Spectrum Disorder (ASD),No,No,Yes,No
+163,Crohn's Disease,Yes,No,Yes,No
+164,Hepatitis,Yes,No,Yes,No
+165,Hepatitis,Yes,No,Yes,No
+166,Hyperglycemia,No,No,Yes,No
+167,Kidney Cancer,No,Yes,Yes,Yes
+168,Kidney Disease,Yes,Yes,No,No
+169,Melanoma,Yes,No,Yes,No
+170,Migraine,No,No,No,No
+171,Ovarian Cancer,No,No,Yes,No
+172,Pancreatitis,No,Yes,Yes,Yes
+173,Rheumatoid Arthritis,Yes,No,No,No
+174,Stroke,No,No,Yes,No
+175,Turner Syndrome,No,No,Yes,No
+176,Turner Syndrome,No,No,Yes,No
+177,Urinary Tract Infection,No,No,No,No
+178,Zika Virus,No,Yes,Yes,No
+179,Zika Virus,No,Yes,Yes,No
+180,Allergic Rhinitis,Yes,Yes,Yes,No
+181,Anxiety Disorders,Yes,Yes,Yes,No
+182,Asthma,Yes,Yes,No,Yes
+183,Asthma,Yes,Yes,No,Yes
+184,Cataracts,No,No,Yes,No
+185,Crohn's Disease,No,No,Yes,No
+186,Crohn's Disease,Yes,Yes,Yes,No
+187,Depression,No,No,Yes,No
+188,Diabetes,Yes,No,Yes,No
+189,Diabetes,No,Yes,Yes,No
+190,Hypertension,Yes,No,Yes,No
+191,Hypothyroidism,No,No,Yes,No
+192,Liver Disease,Yes,Yes,Yes,No
+193,Multiple Sclerosis,Yes,No,No,No
+194,Multiple Sclerosis,Yes,No,No,No
+195,Osteoarthritis,Yes,No,Yes,Yes
+196,Osteoporosis,Yes,Yes,Yes,No
+197,Pneumocystis Pneumonia (PCP),Yes,Yes,Yes,No
+198,Pneumonia,Yes,Yes,Yes,Yes
+199,Scoliosis,No,No,No,No
+200,Sickle Cell Anemia,No,No,Yes,No
+201,Tetanus,No,No,Yes,No
+202,Tetanus,No,No,Yes,No
+203,Hypertension,No,No,No,No
+204,Hypothyroidism,No,No,Yes,No
+205,Hypothyroidism,No,No,Yes,No
+206,Allergic Rhinitis,Yes,No,No,No
+207,Anemia,No,No,Yes,No
+208,Anxiety Disorders,No,No,Yes,No
+209,Cholera,Yes,No,Yes,Yes
+210,Cholera,Yes,No,Yes,Yes
+211,Crohn's Disease,Yes,Yes,Yes,No
+212,Crohn's Disease,No,No,Yes,No
+213,Depression,No,Yes,Yes,No
+214,Diabetes,No,Yes,No,No
+215,Endometriosis,Yes,No,No,No
+216,Hypertension,No,Yes,No,No
+217,Hypothyroidism,Yes,Yes,Yes,No
+218,Kidney Cancer,No,Yes,No,No
+219,Kidney Disease,No,Yes,No,Yes
+220,Pancreatitis,No,Yes,No,No
+221,Rheumatoid Arthritis,No,Yes,No,No
+222,Sepsis,Yes,Yes,Yes,No
+223,Sleep Apnea,Yes,No,Yes,Yes
+224,Urinary Tract Infection,Yes,Yes,No,Yes
+225,Asthma,Yes,Yes,Yes,Yes
+226,Bronchitis,Yes,Yes,Yes,Yes
+227,Down Syndrome,No,No,Yes,No
+228,Ebola Virus,Yes,Yes,Yes,Yes
+229,Ebola Virus,Yes,Yes,Yes,Yes
+230,Eczema,No,Yes,No,No
+231,Gastroenteritis,Yes,Yes,Yes,Yes
+232,Klinefelter Syndrome,No,No,Yes,No
+233,Liver Cancer,No,Yes,Yes,Yes
+234,Lyme Disease,Yes,No,No,No
+235,Lyme Disease,Yes,No,No,No
+236,Pancreatic Cancer,No,No,Yes,No
+237,Pneumothorax,No,No,Yes,Yes
+238,Stroke,No,Yes,Yes,Yes
+239,Ulcerative Colitis,No,Yes,Yes,No
+240,Hypertension,Yes,Yes,No,No
+241,Multiple Sclerosis,No,Yes,Yes,No
+242,Multiple Sclerosis,No,Yes,Yes,No
+243,Appendicitis,Yes,No,Yes,No
+244,Bronchitis,No,No,Yes,Yes
+245,Bronchitis,Yes,Yes,Yes,Yes
+246,Common Cold,Yes,No,Yes,Yes
+247,Diabetes,No,Yes,No,No
+248,Esophageal Cancer,No,No,Yes,No
+249,HIV/AIDS,Yes,No,No,No
+250,HIV/AIDS,Yes,No,No,No
+251,Hypertension,No,Yes,No,No
+252,Liver Disease,No,Yes,Yes,No
+253,Marfan Syndrome,No,No,Yes,No
+254,Migraine,No,Yes,Yes,Yes
+255,Osteoporosis,No,No,Yes,No
+256,Parkinson's Disease,No,No,Yes,No
+257,Parkinson's Disease,No,No,Yes,No
+258,Anxiety Disorders,Yes,Yes,No,No
+259,Coronary Artery Disease,No,No,Yes,No
+260,Coronary Artery Disease,No,No,Yes,No
+261,Hemorrhoids,No,No,No,No
+262,Hypertension,Yes,No,Yes,No
+263,Hypothyroidism,No,No,Yes,No
+264,Osteoarthritis,Yes,Yes,No,No
+265,Osteoporosis,Yes,No,Yes,Yes
+266,Osteoporosis,No,Yes,Yes,No
+267,Osteoporosis,Yes,No,Yes,No
+268,Osteoporosis,Yes,No,Yes,No
+269,Polycystic Ovary Syndrome (PCOS),Yes,Yes,No,No
+270,Systemic Lupus Erythematosus...,No,Yes,Yes,No
+271,Typhoid Fever,No,Yes,No,No
+272,Typhoid Fever,No,Yes,No,No
+273,Influenza,Yes,Yes,Yes,Yes
+274,Pneumonia,Yes,Yes,No,Yes
+275,Breast Cancer,No,No,Yes,No
+276,Coronary Artery Disease,Yes,Yes,No,No
+277,Coronary Artery Disease,Yes,Yes,No,No
+278,Hyperthyroidism,No,No,Yes,No
+279,Measles,Yes,Yes,No,No
+280,Measles,Yes,Yes,No,No
+281,Osteoarthritis,No,Yes,No,Yes
+282,Osteomyelitis,No,No,Yes,No
+283,Osteoporosis,Yes,No,No,No
+284,Osteoporosis,No,Yes,No,No
+285,Osteoporosis,No,Yes,No,No
+286,Polio,Yes,Yes,Yes,No
+287,Asthma,Yes,Yes,Yes,Yes
+288,Chronic Kidney Disease,No,No,Yes,No
+289,Hemophilia,No,No,Yes,No
+290,Hepatitis B,No,Yes,Yes,No
+291,Hepatitis B,No,Yes,Yes,No
+292,Hypertension,No,No,Yes,No
+293,Hypertension,Yes,No,Yes,No
+294,Hypertension,No,No,No,No
+295,Kidney Cancer,Yes,Yes,Yes,No
+296,Kidney Disease,Yes,Yes,Yes,Yes
+297,Osteoporosis,Yes,No,Yes,No
+298,Pancreatitis,Yes,Yes,Yes,No
+299,Parkinson's Disease,Yes,Yes,No,No
+300,Parkinson's Disease,Yes,Yes,No,No
+301,Prader-Willi Syndrome,No,No,Yes,No
+302,Rheumatoid Arthritis,No,No,Yes,No
+303,Thyroid Cancer,No,No,Yes,No
+304,Tuberculosis,Yes,Yes,Yes,No
+305,Bladder Cancer,No,No,Yes,No
+306,Diabetes,No,No,Yes,No
+307,Otitis Media (Ear Infection),Yes,Yes,Yes,No
+308,Stroke,Yes,No,Yes,No
+309,Stroke,Yes,No,Yes,No
+310,Tourette Syndrome,No,No,Yes,No
+311,Urinary Tract Infection (UTI),Yes,No,Yes,No
+312,Alzheimer's Disease,No,Yes,No,No
+313,Alzheimer's Disease,No,Yes,No,No
+314,Alzheimer's Disease,No,No,Yes,No
+315,Bronchitis,Yes,No,Yes,Yes
+316,Chronic Obstructive Pulmonary Disease (COPD),Yes,No,Yes,Yes
+317,Chronic Obstructive Pulmonary Disease (COPD),Yes,No,Yes,Yes
+318,Dementia,No,No,Yes,No
+319,Diabetes,Yes,Yes,Yes,No
+320,Diverticulitis,No,No,Yes,No
+321,Liver Cancer,Yes,Yes,Yes,No
+322,Lung Cancer,Yes,Yes,Yes,No
+323,Lung Cancer,Yes,No,Yes,No
+324,Mumps,No,No,Yes,No
+325,Mumps,No,No,Yes,No
+326,Osteoporosis,No,Yes,Yes,No
+327,Stroke,Yes,Yes,Yes,No
+328,Alzheimer's Disease,Yes,No,Yes,No
+329,Alzheimer's Disease,Yes,No,Yes,No
+330,Cholecystitis,No,No,Yes,No
+331,Chronic Obstructive Pulmonary Disease (COPD),No,Yes,Yes,Yes
+332,Chronic Obstructive Pulmonary Disease (COPD),No,Yes,Yes,Yes
+333,Osteoporosis,Yes,No,No,No
+334,Parkinson's Disease,No,No,Yes,No
+335,Prostate Cancer,Yes,Yes,No,No
+336,Schizophrenia,No,Yes,Yes,No
+337,Gout,Yes,No,Yes,No
+338,Migraine,No,No,Yes,No
+339,Stroke,No,Yes,No,No
+340,Stroke,No,Yes,No,No
+341,Testicular Cancer,No,No,Yes,No
+342,Tonsillitis,Yes,Yes,Yes,No
+343,Williams Syndrome,No,No,Yes,No
+344,Stroke,Yes,No,Yes,No
+345,Stroke,Yes,No,Yes,No
+346,Stroke,Yes,No,Yes,No
+347,Stroke,Yes,No,Yes,No
+348,Stroke,Yes,No,Yes,No
+349,Stroke,Yes,No,Yes,No

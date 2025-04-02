@@ -41,7 +41,7 @@ class JudgeOpenBioLLM(JudgeLLMBase, ABC):
         :return: The faithfulness score
         """
         # Set up evaluators
-        faithfulness_evaluator = FaithfulnessEvaluator(llm=self.judge_llm, )
+        faithfulness_evaluator = FaithfulnessEvaluator(llm=self.judge_llm)
 
         # Evaluate for each score
         faithfulness_score = faithfulness_evaluator.evaluate_response(response=response_obj)

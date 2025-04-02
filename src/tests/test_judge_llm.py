@@ -1,7 +1,7 @@
 from src.node_manager import NodeManager
 from src.llm_model import QueryEngine
 from dotenv import load_dotenv
-from src.judge_default import JudgeDefault
+from src.judge_qwen import JudgeQwen
 from src.judge_OpenBioLLM import JudgeOpenBioLLM
 
 

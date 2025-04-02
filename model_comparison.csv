@@ -3,6 +3,6 @@ sentence-transformers/all-MiniLM-L6-v2,embed,0.0227,Hugging Face,https://hugging
 mistralai/mistral-7b-instruct,response,7.24,Hugging Face,https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2
 qwen/qwen-turbo,judge,1.5 - 72,Open Router,https://qwenlm.github.io/blog/qwen2.5/
 Med-PaLM,,12 - 562,Google,https://encord.com/blog/med-palm-explained/
-OpenBioLLM,,8 - 70,Hugging Face,"https://huggingface.co/MoMonir/Llama3-OpenBioLLM-8B-GGUF
+OpenBioLLM,,Aug-70,Hugging Face,"https://huggingface.co/MoMonir/Llama3-OpenBioLLM-8B-GGUF
 https://huggingface.co/aaditya/Llama3-OpenBioLLM-70B"
 MMed-Llama 3,,8,Hugging Face,https://huggingface.co/Henrychur/MMed-Llama-3-8B

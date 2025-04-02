@@ -12,7 +12,7 @@ from llama_index.llms.openrouter import OpenRouter
 from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 
 
-class JudgeDefault(JudgeLLMBase, ABC):
+class JudgeQwen(JudgeLLMBase, ABC):
     """
     Child class to use the judge LLM with
     """

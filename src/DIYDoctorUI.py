@@ -5,18 +5,40 @@ import hashlib
 
 # Setup MongoDB connection
 client = MongoClient("mongodb+srv://genai:genai123@diy-doctor.b82as.mongodb.net/")
-db = client["DIY-Doctor"]  # Database name
-users = db.users  # Collection name
+ # Database name based on MongoDB
+db = client["diy-doctor"] 
+# Collection name based on MongoDB
+users = db.login  
+print(db.list_collection_names())
 
+# Verify if a user's login credentials are correct
+# Params: 
+#  - username (str): The username of the user trying to log in.
+#  - password (str): The password provided by the user for login.
+# Returns:
+#  - bool: True if the username and password match a database entry, False otherwise.
 def verify_login(username, password):
-    # Query using lower_username
+    print(f"Logging in with username: {username} and password: {password}")
     user = users.find_one({"lower_username": username.lower()})
     if user:
-        # Check if passwords are hashed
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        return user["password"] == hashed_password
+        print(f"Found user: {user}")
+        print(f"Stored password: {user['password']} - Input password: {password}")
+        return user["password"] == password
+    else:
+        print("No user found with the username:", username)
     return False
 
+# Using Hashing
+# def verify_login(username, password):
+#     # Query using lower_username
+#     user = users.find_one({"lower_username": username.lower()})
+#     if user:
+#         # Check if passwords are hashed
+#         hashed_password = hashlib.sha256(password.encode()).hexdigest()
+#         return user["password"] == hashed_password
+#     return False
+
+# Display the login page and handle user authentication.
 def login_page():
     st.sidebar.title("Login")
     username = st.sidebar.text_input("Username")
@@ -32,6 +54,7 @@ def login_page():
         st.session_state['logged_in'] = True
         st.session_state['username'] = "Developer"
 
+# Display the dashboard page to the logged-in user.
 def dashboard_page():
     # Create a row at the top for the welcome message and logout button
     header_cols = st.columns([0.85, 0.15])  

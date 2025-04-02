@@ -9,9 +9,10 @@ db = client["DIY-Doctor"]  # Database name
 users = db.users  # Collection name
 
 def verify_login(username, password):
-    user = users.find_one({"username": username})
+    # Query using lower_username
+    user = users.find_one({"lower_username": username.lower()})
     if user:
-        # Assuming passwords are stored as hashed in the database
+        # Check if passwords are hashed
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         return user["password"] == hashed_password
     return False
@@ -46,8 +47,8 @@ def dashboard_page():
 
     st.write("This is your medical dashboard.")
 
-     # Adding model selector
-    model_options = ['Model 1', 'Model 2', 'Model 3']
+     # Adding model selector for llm models
+    model_options = ['Model 1 ', 'Model 2', 'Model 3']
     selected_model = st.selectbox("Choose an LLM model to use:", model_options, key='model_selector')
     st.write(f"You have selected {selected_model}.")
 
@@ -81,4 +82,4 @@ if __name__ == "__main__":
 #         position, text, confidence = result
 #         st.write(f"Extracted Text: {text}, Confidence: {confidence:.2f}")
 
-# having a selector for llm models? 
+ 

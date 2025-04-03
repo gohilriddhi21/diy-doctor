@@ -1,31 +1,52 @@
 import yaml
 from pymongo import MongoClient
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 class MongoDBConnector:
-    def __init__(self, config_path: str):
-        """
-        Initialize MongoDB connection using credentials from a config file.
-        :param config_path: Path to the YAML configuration file
-        """
-        with open(config_path, "r") as file:
-            self.config = yaml.safe_load(file)
-        
-        uri = self.config["mongodb"]["uri"]
-        self.client = MongoClient(uri)
-
-    def get_collection(self, collection_key: str):
-        """
-        Get a collection from the database using collection key.
-        :param collection_key: The key for the collection in config.yaml
-        :return: The collection object
-        """
-        collection_name = self.config["mongodb"]["collections"].get(collection_key)
-        if not collection_name:
-            raise ValueError(f"Collection key '{collection_key}' not found in config.")
-        return self.db[collection_name]
+    def __init__(self, config_file_path: str):
+        self.config = self._read_config(config_file_path)     
+        self.mongo_uri = self.config.get('mongodb', {}).get('uri') 
+        self.database_name = self.config.get('mongodb', {}).get('database_name') 
+        self.client = None # MongoDB client for connecting to MongoDB
+        self.db = None # MongoDB database object which will be used to interact with the database
+        self._connect()
     
-    def close_connection(self):
-        """
-        Close the database connection.
-        """
-        self.client.close()
+    def _read_config(self, config_file):
+        try:
+            logger.error("Reading configuration file...")
+            with open(config_file, 'r') as f:
+                data = yaml.safe_load(f)
+                logger.error("Config file read successfully")
+                return data
+        except FileNotFoundError:
+            logger.error(f"Configuration file '{config_file}' not found.")
+            return {}
+        except yaml.YAMLError as e:
+            logger.error(f"Error parsing configuration file '{config_file}': {e}")
+            return {}
+
+    def _connect(self):
+        logger.info("Connecting to MongoDB...")
+        if not self.mongo_uri or not self.database_name:
+            logger.error("MongoDB URI or database name not found in configuration.")
+            return
+
+        try:
+            self.client = MongoClient(self.mongo_uri, serverSelectionTimeoutMS=3000)
+            self.client.admin.command("ping")  # Force connection check
+            self.db = self.client[self.database_name]
+            logger.info(f"Connected to MongoDB database: {self.database_name}")
+        except Exception as e:
+            logger.error(f"Error connecting to MongoDB: {e}")
+            self.close()
+
+    def close(self):
+        if self.client:
+            logger.info("Closing MongoDB connection...")
+            self.client.close()
+            self.client = None # Reset client to None after closing
+            self.db = None # Reset db to None after closing
+            logger.info("MongoDB connection closed.")

@@ -1,8 +1,8 @@
-from src.node_manager import NodeManager
-from src.llm_model import QueryEngine
+from src.service.node_manager import NodeManager
+from src.models.llm_model import QueryEngine
 from dotenv import load_dotenv
-from src.judge_qwen import JudgeQwen
-from src.judge_OpenBioLLM import JudgeOpenBioLLM
+from src.models.judge_qwen import JudgeQwen
+from src.models.judge_models.judge_OpenBioLLM import JudgeOpenBioLLM
 
 
 def test_success(query_engine, judge_llm_manager, query):

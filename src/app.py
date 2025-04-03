@@ -1,6 +1,6 @@
 import streamlit as st
-from node_manager import NodeManager
-from llm_model import QueryEngine
+from src.service.node_manager import NodeManager
+from src.models.llm_model import QueryEngine
 from dotenv import load_dotenv
 import os
 

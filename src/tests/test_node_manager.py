@@ -1,4 +1,4 @@
-from src.node_manager import NodeManager
+from src.service.node_manager import NodeManager
 
 
 def main():

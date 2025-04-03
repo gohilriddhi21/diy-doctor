@@ -5,7 +5,7 @@
 
 
 from abc import ABC
-from src.judge_llm_base import JudgeLLMBase
+from src.models.base.judge_llm_base import JudgeLLMBase
 from dotenv import load_dotenv
 import os
 from llama_index.llms.openrouter import OpenRouter

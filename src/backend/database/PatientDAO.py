@@ -21,11 +21,3 @@ class PatientDAO:
         collection = self.db_connector.get_collection(collection_key)
         return collection.find_one({"Patient_ID": patient_id})
 
-    def get_all_patient_records(self, collection_key: str):
-        """
-        Retrieve all patient records from a specific collection.
-        :param collection_key: The key for the collection in config.yaml
-        :return: A list of patient records
-        """
-        collection = self.db_connector.get_collection(collection_key)
-        return list(collection.find({}))

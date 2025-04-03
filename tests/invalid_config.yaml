@@ -1,0 +1,10 @@
+mongodb:
+  # connection
+  uri: invalid
+  
+  # database name
+  database_name: invalid
+  
+  # collections present in the database
+  collections:
+    invalid_collection_name: invalid

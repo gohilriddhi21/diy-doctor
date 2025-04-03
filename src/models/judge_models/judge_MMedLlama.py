@@ -1,10 +1,12 @@
 # Riddhi Gohil
 # CS 7180 - Generative AI
 # gohil.r@northeastern.edu
-# judge_mmed_llama.py - Judge using the MMed-Llama 3 model
+# judge_MMedLlama.py - Judge using the MMed-Llama 3 Free model
 
-
+import sys
+import os
 from abc import ABC
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.models.base.judge_llm_base import JudgeLLMBase
 from dotenv import load_dotenv
 import os
@@ -16,7 +18,7 @@ class JudgeMMedLlama(JudgeLLMBase, ABC):
     """
     Child class to use the MMed-Llama 3 model as a judge LLM
     """
-    def __init__(self, model_name="meta-llama/Meta-Llama-3-8B-Instruct", max_tokens=512, context_window=4096):
+    def __init__(self, model_name="meta-llama/llama-3.2-3b-instruct:free", max_tokens=512, context_window=4096):
         super().__init__(model_name, max_tokens, context_window)
         self.initialize_judge_llm()
 
@@ -34,7 +36,8 @@ class JudgeMMedLlama(JudgeLLMBase, ABC):
         self.judge_llm = OpenRouter(api_key=api_key, 
                                    model=self.model_name,
                                    max_tokens=self.max_tokens,
-                                   context_window=self.context_window)
+                                   context_window=self.context_window
+                                   )
 
     def evaluate_faithfulness(self, response_obj):
         """

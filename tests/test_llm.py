@@ -1,11 +1,11 @@
 from src.service.node_manager import NodeManager
-from src.llm_model import QueryEngine
+from src.models.llm_model import QueryEngine
 from dotenv import load_dotenv
 
 
 def main():
     load_dotenv()
-    pdf_path = "WebMD.pdf"
+    pdf_path = "tests/WebMD.pdf"
     node_manager = NodeManager(pdf_path)
     query_engine = QueryEngine(node_manager.get_nodes())
     query = "What treatments could be effective for somebody with a migraine?"

@@ -1,8 +1,10 @@
-import streamlit as st
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.service.node_manager import NodeManager
 from src.models.llm_model import QueryEngine
+import streamlit as st
 from dotenv import load_dotenv
-import os
 
 def main():
     load_dotenv()

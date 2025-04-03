@@ -2,6 +2,10 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.backend.database.MongoDBConnector import MongoDBConnector
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 class PatientDAO:
     def __init__(self, db_connector: MongoDBConnector):
@@ -20,4 +24,22 @@ class PatientDAO:
         """
         collection = self.db_connector.get_collection(collection_key)
         return collection.find_one({"Patient_ID": patient_id})
+    
+    def get_patient_records_from_all_collections(self, patient_id: str):
+        """
+        Retrieve a patient's records from all collections in the database.
+        :param patient_id: The ID of the patient
+        :return: A list of patient records from all collections
+        """
+        patient_records = []
+        try:
+            collections = self.db_connector.db.list_collection_names()
+            for collection_name in collections["patient"]:
+                collection = self.db_connector.db[collection_name]
+                result = collection.find({"Patient_ID": patient_id})
+                patient_records.extend(result)
+        except Exception as e:
+            logger.error(f"Error retrieving patient records: {e}")
+        
+        return patient_records if patient_records else None
 

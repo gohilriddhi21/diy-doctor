@@ -16,11 +16,15 @@ class TestMongoDBConnector(unittest.TestCase):
                 'uri': 'mongodb+srv://genai:genai123@diy-doctor.b82as.mongodb.net/?appName=DIY-Doctor',
                 'database_name': 'diy-doctor',
                 'collections': {
-                    'logins_collection': 'login',
+                    'account': {
+                        'logins_collection': 'login'
+                    },
+                    'patient': {
                     'patient_data_collection': 'patient_data',
                     'family_medical_history_collection': 'family_medical_history',
                     'patient_diseases_collection': 'patient_diseases',
                     'patient_lab_reports_collection': 'patient_lab_reports'
+                    }
                 }
             }
         }

@@ -37,6 +37,13 @@ class TestPatientDAO(unittest.TestCase):
         records = self.patient_dao.__get_patient_by_id__(existent_patient_id, "login")
         self.assertTrue(records[0]["lower_username"], "bobby")
         self.assertTrue(records[0]["password"], "password")
+    
+    def test_get_patient_by_id_from_family_medical_history_success(self):
+        existent_patient_id = "1"
+        records = self.patient_dao.__get_patient_by_id__(existent_patient_id, "family_medical_history")
+        self.assertTrue(records[0]["Mother_Medical_History"], "Hypertension, diabetes")
+        self.assertTrue(records[0]["Father_Medical_History"], "Heart disease")
+    
 
     # def test_get_patient_record_failure(self):
     #     non_existent_patient_id = "0"

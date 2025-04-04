@@ -19,7 +19,7 @@ class MongoDBConnector:
             logger.info("Reading configuration file...")
             with open(config_file, 'r') as f:
                 data = yaml.safe_load(f)
-                logger.error("Config file read successfully")
+                logger.info("Config file read successfully")
                 return data
         except FileNotFoundError:
             logger.error(f"Configuration file '{config_file}' not found.")

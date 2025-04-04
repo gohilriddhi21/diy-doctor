@@ -14,6 +14,16 @@ class PatientDAO:
         :param db_connector: Instance of MongoDBConnector
         """
         self.db_connector = db_connector
+    
+    def __get_patient_by_id__(self, patient_id: str, collection_key: str):
+        """
+        Retrieve a patient's record from a specific collection.
+        :param patient_id: The ID of the patient
+        :param collection_key: The key for the collection in config.yaml
+        :return: The patient's record or None if not found
+        """
+        collection = self.db_connector.db.get_collection(collection_key)
+        return list(collection.find({"Patient_ID": patient_id}))
 
     def get_patient_records_from_all_collections(self, patient_id: str):
         """
@@ -25,20 +35,10 @@ class PatientDAO:
         try:
             collections = self.db_connector.db.list_collection_names()
             for collection_name in collections["patient"]:
-                result = self.__get_patient_record__(patient_id, collection_name)
+                result = self.__get_patient_by_id__(patient_id, collection_name)
                 if result:
                     patient_records.extend([result])
         except Exception as e:
             logger.error(f"Error retrieving patient records: {e}")
         
         return patient_records if patient_records else None
-
-    def __get_patient_record__(self, patient_id: str, collection_key: str):
-        """
-        Retrieve a patient's record from a specific collection.
-        :param patient_id: The ID of the patient
-        :param collection_key: The key for the collection in config.yaml
-        :return: The patient's record or None if not found
-        """
-        collection = self.db_connector.db.get_collection(collection_key)
-        return collection.find({"Patient_ID": patient_id})

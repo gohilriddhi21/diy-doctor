@@ -16,7 +16,7 @@ class MongoDBConnector:
     
     def _read_config(self, config_file):
         try:
-            logger.error("Reading configuration file...")
+            logger.info("Reading configuration file...")
             with open(config_file, 'r') as f:
                 data = yaml.safe_load(f)
                 logger.error("Config file read successfully")
@@ -44,9 +44,12 @@ class MongoDBConnector:
             self.close()
 
     def close(self):
-        if self.client:
+        try:
             logger.info("Closing MongoDB connection...")
-            self.client.close()
-            self.client = None # Reset client to None after closing
-            self.db = None # Reset db to None after closing
-            logger.info("MongoDB connection closed.")
+            if self.client:
+                self.client.close()
+                self.client = None # Reset client to None after closing
+                self.db = None # Reset db to None after closing
+                logger.info("MongoDB connection closed.")
+        except Exception as e:
+            logger.error(f"Error closing MongoDB connection: {e}")

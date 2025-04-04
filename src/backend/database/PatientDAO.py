@@ -33,11 +33,14 @@ class PatientDAO:
         """
         patient_records = []
         try:
-            collections = self.db_connector.db.list_collection_names()
-            for collection_name in collections["patient"]:
+            collections = self.db_connector.config['mongodb']['collections']['patient'].values()        
+            for collection_name in collections:
+                logger.info("Retrieving patient records from collection: %s", collection_name)
                 result = self.__get_patient_by_id__(patient_id, collection_name)
                 if result:
-                    patient_records.extend([result])
+                    logger.info("Found patient records in collection %s", collection_name)
+                    patient_records.extend(result)
+                logger.info("Patient records retrieved from collection %s", collection_name)
         except Exception as e:
             logger.error(f"Error retrieving patient records: {e}")
         

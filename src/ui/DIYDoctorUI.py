@@ -1,8 +1,7 @@
 import streamlit as st
 from pymongo import MongoClient
 from transformers import pipeline
-
-from judge_OpenBioLLM import JudgeOpenBioLLM  
+from src.models.base.judge_llm_base import JudgeOpenBioLLM  
 
 # Setup MongoDB connection
 client = MongoClient("mongodb+srv://genai:genai123@diy-doctor.b82as.mongodb.net/")

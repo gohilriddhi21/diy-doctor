@@ -5,9 +5,11 @@
 
 
 from abc import ABC
-from src.judge_llm_base import JudgeLLMBase
-from dotenv import load_dotenv
 import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.models.base.judge_llm_base import JudgeLLMBase
+from dotenv import load_dotenv
 from llama_index.llms.openrouter import OpenRouter
 from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 

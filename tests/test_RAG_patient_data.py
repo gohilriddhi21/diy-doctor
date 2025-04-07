@@ -2,6 +2,8 @@ import sys
 from src.backend.database.PatientDAO import PatientDAO
 from src.backend.database.MongoDBConnector import MongoDBConnector
 from dotenv import load_dotenv
+from src.service.node_manager import NodeManager
+from src.models.llm_model import QueryEngine
 
 
 def main(argv):
@@ -16,9 +18,15 @@ def main(argv):
     existent_patient_id = "1"
     records = patient_dao.get_patient_records_from_all_collections(existent_patient_id)
 
-    print(records)
-    for record in records:
-        print(record)
+    # Get nodes from patient records
+    node_manager = NodeManager()
+    node_manager.set_nodes_from_patient_data(records)
+    nodes = node_manager.get_nodes()
+
+    # Run test query
+    query_engine = QueryEngine(nodes)
+    query = "What is the patient's father medical history?"
+    print(query_engine.generate_response(query))
 
     # Close database connection
     if db_connector.client:

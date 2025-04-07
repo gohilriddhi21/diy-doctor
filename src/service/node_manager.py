@@ -24,7 +24,7 @@ class NodeManager:
         self._pipeline = self._set_ingestion_pipeline()
 
         # Create storage for documents and nodes
-        self._all_documents = None
+        self._documents = None
         self._nodes = None
 
     def __len__(self):
@@ -38,7 +38,6 @@ class NodeManager:
         Sets all documents and nodes to None to clear documents
         :return: None
         """
-        self._all_documents = None
         self._nodes = None
 
     def set_nodes_from_pdf(self, document_path):
@@ -51,8 +50,25 @@ class NodeManager:
         start_time = int(round(time.time()))
         print("Processing document data from {}... ".format(document_path))
 
-        new_documents = self._process_pdf_document_data(document_path)
-        self._nodes = self._pipeline.run(documents=new_documents)
+        self._documents = self._process_pdf_document_data(document_path)
+        self._nodes = self._pipeline.run(documents=self._documents)
+
+        # Completion message
+        end_time = int(round(time.time()))
+        print("Finished! Extracted {} nodes in {} seconds.\n".format(len(self._nodes), end_time - start_time))
+
+    def set_nodes_from_patient_data(self, patient_records):
+        """
+        Sets nodes from a list of patient records
+        :param patient_records: Patient record data in form of list[dict{}, dict{}, ...]
+        :return: None
+        """
+        # Start message
+        start_time = int(round(time.time()))
+        print("Processing document data from patient records... ")
+
+        self._documents = self._process_records_document_data(patient_records)
+        self._nodes = self._pipeline.run(documents=self._documents)
 
         # Completion message
         end_time = int(round(time.time()))
@@ -63,6 +79,38 @@ class NodeManager:
         :return: The nodes managed by the object gracefully
         """
         return self._nodes
+
+    def get_documents(self):
+        """
+        :return: The documents managed by the object gracefully
+        """
+        return self._documents
+
+    def _process_records_document_data(self, patient_records):
+        """
+        Processes a patient record list of dictionaries into a set of documents
+        :param patient_records: The patient records object
+        :return: None if patient records were None, else the processed set of Documents to extract info from
+        """
+        if patient_records is None:
+            return None
+        else:
+            documents = []
+            for record in patient_records:
+                record_string = self._process_record_to_text(record)
+                documents.append(Document(text=record_string))
+            return documents
+
+    def _process_record_to_text(self, record):
+        """
+        Process data from record dictionary into a single String to extract information from
+        :param record: The record dictionary to process into a text String (assumes non-empty)
+        :return: The processed record as a String
+        """
+        record_string = ""
+        for key in record:
+            record_string += "{}: {} ".format(key, record[key]).replace("_", " ").lower()
+        return record_string
 
     def _process_pdf_document_data(self, document_path):
         """

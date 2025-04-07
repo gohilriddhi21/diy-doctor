@@ -161,7 +161,7 @@ class QueryEngine:
         self._bm25_retriever = BM25Retriever.from_defaults(nodes=self._nodes, similarity_top_k=similarity_top_k,
                                                            stemmer=Stemmer.Stemmer(language), language=language)
 
-    def _set_fusion_retriever(self, similarity_top_k=7, num_queries=1, vector_weight=0.4, lexical_weight=0.6):
+    def _set_fusion_retriever(self, similarity_top_k=4, num_queries=1, vector_weight=0.4, lexical_weight=0.6):
         """
         Creates a fusion retriever based on a vector-based (AutoMerging Retriever) and lexical-based (BM25 Retriever) retrievers
         The weights for vector and lexical methods should add up to 1.0

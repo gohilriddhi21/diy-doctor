@@ -23,7 +23,8 @@ class NodeManager:
         # Set the ingestion pipeline and nodes
         self._pipeline = self._set_ingestion_pipeline()
 
-        # Create storage for nodes
+        # Create storage for documents and nodes
+        self._all_documents = None
         self._nodes = None
 
     def __len__(self):
@@ -32,10 +33,20 @@ class NodeManager:
         """
         return len(self._nodes)
 
-    def clear_documents(self):
+    def clear_nodes(self):
+        """
+        Sets all documents and nodes to None to clear documents
+        :return: None
+        """
         self._all_documents = None
+        self._nodes = None
 
-    def append_nodes_from_pdf(self, document_path):
+    def set_nodes_from_pdf(self, document_path):
+        """
+        Sets nodes from a PDF document
+        :param document_path: Path to the PDF document
+        :return: None
+        """
         # Start message
         start_time = int(round(time.time()))
         print("Processing document data from {}... ".format(document_path))

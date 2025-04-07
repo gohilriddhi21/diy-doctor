@@ -5,6 +5,11 @@
 
 
 from abc import ABC
+<<<<<<< HEAD:src/judge_OpenBioLLM.py
+from judge_llm_base import JudgeLLMBase
+from dotenv import load_dotenv
+=======
+>>>>>>> 6b3f14fbc13da92b4bb61ea58cc580b28715f3d0:src/models/judge_models/judge_OpenBioLLM.py
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -20,7 +25,7 @@ class JudgeOpenBioLLM(JudgeLLMBase, ABC):
     """
     Child class to use the judge LLM with
     """
-    def __init__(self, model_name="aaditya/OpenBioLLM-Llama3-8B", max_tokens=512, context_window=4096):
+    def __init__(self, model_name="aaditya/Llama3-OpenBioLLM-8B", max_tokens=512, context_window=4096):
         super().__init__(model_name, max_tokens, context_window)
         self.initialize_judge_llm()
 

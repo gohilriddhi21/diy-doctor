@@ -5,7 +5,7 @@
 
 
 from abc import ABC
-from src.judge_llm_base import JudgeLLMBase
+from judge_llm_base import JudgeLLMBase
 from dotenv import load_dotenv
 import os
 from llama_index.llms.openrouter import OpenRouter
@@ -18,7 +18,7 @@ class JudgeOpenBioLLM(JudgeLLMBase, ABC):
     """
     Child class to use the judge LLM with
     """
-    def __init__(self, model_name="aaditya/OpenBioLLM-Llama3-8B", max_tokens=512, context_window=4096):
+    def __init__(self, model_name="aaditya/Llama3-OpenBioLLM-8B", max_tokens=512, context_window=4096):
         super().__init__(model_name, max_tokens, context_window)
         self.initialize_judge_llm()
 

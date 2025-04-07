@@ -20,8 +20,8 @@ def connect_to_mongo():
     if config_data:
         print("Configuration data read successfully.")
         uri = config_data['mongodb']['uri']
-        db_name = config_data['mongodb']['database']
-        collection_name = config_data['mongodb']['patient_lab_reports_collection']
+        db_name = config_data['mongodb']['database_name']
+        collection_name = config_data['mongodb']["collections"]["patient"]['patient_lab_reports_collection']
         print(f"Set MongoDB URI: {uri}")
         
         # Create a new client and connect to the server
@@ -57,6 +57,7 @@ def ingest_csv_to_mongo(csv_file_path, collection):
         ]
         
         df_filtered = df[selected_columns][:300]
+        df_filtered['Patient_ID'] = df_filtered['Patient_ID'].astype(str)
         data = df_filtered.to_dict(orient='records')
         print("\ndata:\n", data)
         

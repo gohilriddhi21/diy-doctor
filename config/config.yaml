@@ -1,10 +1,20 @@
 mongodb:
-  uri: mongodb+srv://genai:genai123@diy-doctor.b82as.mongodb.net/?appName=DIY-Doctor
+  # creds
   username: genai
   password: genai123
-  database: diy-doctor
-  logins_collection: login
-  patient_data_collection: patient_data
-  family_medical_history_collection: family_medical_history
-  patient_diseases_collection: patient_diseases
-  patient_lab_reports_collection: patient_lab_reports
+
+  # connection
+  uri: mongodb+srv://genai:genai123@diy-doctor.b82as.mongodb.net/?appName=DIY-Doctor
+  
+  # database name
+  database_name: diy-doctor
+  
+  # collections present in the database
+  collections:
+    account:
+      logins_collection: login
+    patient:
+      patient_data_collection: patient_data
+      family_medical_history_collection: family_medical_history
+      patient_diseases_collection: patient_diseases
+      patient_lab_reports_collection: patient_lab_reports

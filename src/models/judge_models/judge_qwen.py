@@ -1,24 +1,24 @@
 # David Treadwell
 # CS 7180 - Generative AI
 # treadwell.d@northeastern.edu
-# judge_OpenBioLLM.py - Judge using the OpenBioLLM 8B parameter model
+# judge_default.py - Default judge LLM based on RAG from assignment 4 of CS 7180 course
 
 
 from abc import ABC
-from src.judge_llm_base import JudgeLLMBase
-from dotenv import load_dotenv
 import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.models.base.judge_llm_base import JudgeLLMBase
+from dotenv import load_dotenv
 from llama_index.llms.openrouter import OpenRouter
-from llama_index.llms.huggingface import HuggingFaceInferenceAPI, HuggingFaceLLM
-from transformers import AutoTokenizer, AutoModelForCausalLM
 from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 
 
-class JudgeOpenBioLLM(JudgeLLMBase, ABC):
+class JudgeQwen(JudgeLLMBase, ABC):
     """
     Child class to use the judge LLM with
     """
-    def __init__(self, model_name="aaditya/OpenBioLLM-Llama3-8B", max_tokens=512, context_window=4096):
+    def __init__(self, model_name="qwen/qwen-turbo", max_tokens=512, context_window=4096):
         super().__init__(model_name, max_tokens, context_window)
         self.initialize_judge_llm()
 
@@ -27,12 +27,11 @@ class JudgeOpenBioLLM(JudgeLLMBase, ABC):
         Initializes the judge LLM
         :return: None
         """
-        # Note downloading the model the first time may take a few minutes
-        # TODO might need to quantize, use GPU, lower max tokens, etc. because currently slow
-        self.judge_llm = HuggingFaceLLM(model_name=self.model_name,
-                                        tokenizer_name=self.model_name,
-                                        max_new_tokens=self.max_tokens,
-                                        context_window=self.context_window)
+        load_dotenv()
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        self.judge_llm = OpenRouter(api_key=api_key, model=self.model_name,
+                                    max_tokens=self.max_tokens,
+                                    context_window=self.context_window)
 
     def evaluate_faithfulness(self, response_obj):
         """

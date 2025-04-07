@@ -1,8 +1,10 @@
-from src.node_manager import NodeManager
-from src.llm_model import QueryEngine
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.service.node_manager import NodeManager
+from src.models.llm_model import QueryEngine
 from dotenv import load_dotenv
-from src.judge_qwen import JudgeQwen
-from src.judge_OpenBioLLM import JudgeOpenBioLLM
+from src.models.judge_models.judge_OpenBioLLM import JudgeOpenBioLLM
 
 
 def test_success(query_engine, judge_llm_manager, query):
@@ -17,7 +19,7 @@ def test_success(query_engine, judge_llm_manager, query):
 
 def main():
     load_dotenv()
-    pdf_path = "WebMD.pdf"
+    pdf_path = "tests/WebMD.pdf"
     node_manager = NodeManager(pdf_path)
     query_engine = QueryEngine(node_manager.get_nodes())
     judge_llm_manager = JudgeOpenBioLLM()

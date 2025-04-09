@@ -1,7 +1,7 @@
 # David Treadwell
 # CS 7180 - Generative AI
 # treadwell.d@northeastern.edu
-# judge_llm_base.py - Contains a class to manage functionality for judge LLM
+# judge_llm.py - Contains a class to manage functionality for judge LLM
 
 
 from src.models.model_loading_function import load_llm

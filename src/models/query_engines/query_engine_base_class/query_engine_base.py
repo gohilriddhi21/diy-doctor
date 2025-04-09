@@ -17,7 +17,7 @@ class QueryEngine(ABC):
     """
     Class to manage base queries and responses
     """
-    def __init__(self, nodes=None, embed_model_name="sentence-transformers/all-MiniLM-L6-v2"):
+    def __init__(self, nodes=None, llm=None, embed_model_name="sentence-transformers/all-MiniLM-L6-v2"):
         # Set defaults for variables necessary to generate retrievals
         # Set index and nodes
         self._nodes = nodes
@@ -37,15 +37,19 @@ class QueryEngine(ABC):
         self._embed_model = HuggingFaceEmbedding(model_name=embed_model_name)
         Settings.embed_model = self._embed_model
 
-        # Set empty LLM model (will be initialized in parent class)
-        # TODO really would rather parameterize this somewhere, but for now this works
-        Settings.llm = None
+        # Set LLM
+        Settings.llm = llm
 
         # Set message for when queries/settings are attempted without nodes and LLM
         self._no_nodes_message = "Nodes are not yet initialized. " \
                                  "Initialize nodes via constructor or \"set_query_nodes\" method"
         self._no_llm_message = "LLM not yet initialized.. " \
                                "Instantiate the query engine using a child class to set LLM - this class is abstract."
+
+        # If nodes were passed in, set the inner variables and retrievers
+        if nodes is not None:
+            self.set_nodes_and_retrievers(nodes)
+            self.update_query_engine(self._default_retriever)
 
     @abstractmethod
     def get_llm(self):

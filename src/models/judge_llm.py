@@ -4,7 +4,7 @@
 # judge_llm_base.py - Contains a class to manage functionality for judge LLM
 
 
-from src.service.model_loading_function import load_llm
+from src.models.model_loading_function import load_llm
 from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 
 

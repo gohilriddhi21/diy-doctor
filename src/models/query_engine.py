@@ -10,7 +10,7 @@ import Stemmer
 from llama_index.core.retrievers import QueryFusionRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from src.service.model_loading_function import load_llm
+from src.models.model_loading_function import load_llm
 
 
 class QueryEngine:

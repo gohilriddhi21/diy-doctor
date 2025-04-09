@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.service.node_manager import NodeManager
-from src.models.query_engines.query_engine_base_class.llm_model import QueryEngine
+from src.models.query_engines.usable_query_engines.query_engine_mistral import QueryEngineMistral
 from dotenv import load_dotenv
 from src.models.judge_models.usable_judge_classes.judge_MMedLlama import JudgeMMedLlama
 
@@ -21,7 +21,7 @@ def main():
     load_dotenv()
     pdf_path = "tests/WebMD.pdf"
     node_manager = NodeManager(pdf_path)
-    query_engine = QueryEngine(node_manager.get_nodes())
+    query_engine = QueryEngineMistral(node_manager.get_nodes())
     judge_llm_manager = JudgeMMedLlama()
     query_1 = "What treatments could be effective for somebody with a migraine?"
     query_2 = "Who is \"BEING MY OWN ADVOCATE\" by?"

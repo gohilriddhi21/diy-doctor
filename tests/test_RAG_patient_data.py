@@ -4,6 +4,7 @@ from src.backend.database.MongoDBConnector import MongoDBConnector
 from dotenv import load_dotenv
 from src.service.node_manager import NodeManager
 from src.models.query_engines.usable_query_engines.query_engine_mistral import QueryEngineMistral
+from src.models.query_engines.usable_query_engines.query_engine_qwen import QueryEngineQwen
 
 
 def main(argv):
@@ -24,7 +25,7 @@ def main(argv):
     nodes = node_manager.get_nodes()
 
     # Run test query
-    query_engine = QueryEngineMistral(nodes)
+    query_engine = QueryEngineQwen(nodes)
     query = "What is the patient's father medical history?"
     print(query_engine.generate_response(query))
 

@@ -7,7 +7,7 @@ import sys
 import os
 from abc import ABC
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.models.judge_models.base.judge_llm_base import JudgeLLMBase
+from src.models.judge_models.judge_base_class.judge_llm_base import JudgeLLMBase
 from dotenv import load_dotenv
 import os
 from llama_index.llms.openrouter import OpenRouter

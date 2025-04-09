@@ -5,13 +5,10 @@
 
 
 from abc import ABC
-<<<<<<< HEAD:src/judge_OpenBioLLM.py
-=======
->>>>>>> 6b3f14fbc13da92b4bb61ea58cc580b28715f3d0:src/models/judge_models/judge_OpenBioLLM.py
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.models.judge_models.base.judge_llm_base import JudgeLLMBase
+from src.models.judge_models.judge_base_class.judge_llm_base import JudgeLLMBase
 from llama_index.llms.huggingface import HuggingFaceLLM
 from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 

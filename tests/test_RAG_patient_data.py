@@ -3,7 +3,7 @@ from src.backend.database.PatientDAO import PatientDAO
 from src.backend.database.MongoDBConnector import MongoDBConnector
 from dotenv import load_dotenv
 from src.service.node_manager import NodeManager
-from src.models.llm_model import QueryEngine
+from src.models.query_engines.query_engine_base_class.llm_model import QueryEngine
 
 
 def main(argv):

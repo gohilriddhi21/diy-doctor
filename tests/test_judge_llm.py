@@ -2,9 +2,9 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.service.node_manager import NodeManager
-from src.models.llm_model import QueryEngine
+from src.models.query_engines.query_engine_base_class.llm_model import QueryEngine
 from dotenv import load_dotenv
-from src.models.judge_models.judge_OpenBioLLM import JudgeOpenBioLLM
+from src.models.judge_models.usable_judge_classes.judge_OpenBioLLM import JudgeOpenBioLLM
 
 
 def test_success(query_engine, judge_llm_manager, query):

@@ -1,31 +1,24 @@
-# David Treadwell
+# Riddhi Gohil
 # CS 7180 - Generative AI
-# treadwell.d@northeastern.edu
-# judge_OpenBioLLM.py - Judge using the OpenBioLLM 8B parameter model
+# gohil.r@northeastern.edu
+# judge_MMedLlama.py - Judge using the MMed-Llama 3 Free model
 
-
-from abc import ABC
-<<<<<<< HEAD:src/judge_OpenBioLLM.py
-from judge_llm_base import JudgeLLMBase
-from dotenv import load_dotenv
-=======
->>>>>>> 6b3f14fbc13da92b4bb61ea58cc580b28715f3d0:src/models/judge_models/judge_OpenBioLLM.py
-import os
 import sys
+import os
+from abc import ABC
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.models.base.judge_llm_base import JudgeLLMBase
+from src.models.judge_models.base.judge_llm_base import JudgeLLMBase
 from dotenv import load_dotenv
+import os
 from llama_index.llms.openrouter import OpenRouter
-from llama_index.llms.huggingface import HuggingFaceInferenceAPI, HuggingFaceLLM
-from transformers import AutoTokenizer, AutoModelForCausalLM
 from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 
 
-class JudgeOpenBioLLM(JudgeLLMBase, ABC):
+class JudgeMMedLlama(JudgeLLMBase, ABC):
     """
-    Child class to use the judge LLM with
+    Child class to use the MMed-Llama 3 model as a judge LLM
     """
-    def __init__(self, model_name="aaditya/Llama3-OpenBioLLM-8B", max_tokens=512, context_window=4096):
+    def __init__(self, model_name="meta-llama/llama-3.2-3b-instruct:free", max_tokens=512, context_window=4096):
         super().__init__(model_name, max_tokens, context_window)
         self.initialize_judge_llm()
 
@@ -34,12 +27,17 @@ class JudgeOpenBioLLM(JudgeLLMBase, ABC):
         Initializes the judge LLM
         :return: None
         """
-        # Note downloading the model the first time may take a few minutes
-        # TODO might need to quantize, use GPU, lower max tokens, etc. because currently slow
-        self.judge_llm = HuggingFaceLLM(model_name=self.model_name,
-                                        tokenizer_name=self.model_name,
-                                        max_new_tokens=self.max_tokens,
-                                        context_window=self.context_window)
+        load_dotenv()
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
+            raise ValueError("Missing OpenRouter API key. "
+                             "Set the 'OPENROUTER_API_KEY' environment variable in your '.env' file.")
+        
+        self.judge_llm = OpenRouter(api_key=api_key, 
+                                   model=self.model_name,
+                                   max_tokens=self.max_tokens,
+                                   context_window=self.context_window
+                                   )
 
     def evaluate_faithfulness(self, response_obj):
         """
@@ -47,24 +45,24 @@ class JudgeOpenBioLLM(JudgeLLMBase, ABC):
         :param response_obj: The full response object to evaluate
         :return: The faithfulness score
         """
-        # Set up evaluators
+        # Set up evaluator
         faithfulness_evaluator = FaithfulnessEvaluator(llm=self.judge_llm)
 
-        # Evaluate for each score
+        # Evaluate for faithfulness score
         faithfulness_score = faithfulness_evaluator.evaluate_response(response=response_obj)
         return faithfulness_score.score
 
     def evaluate_relevancy(self, query, response_obj):
         """
-        Evaluates how faithful a response to a query was
+        Evaluates how relevant a response to a query was
         :param query:        The original query used to generate the response
         :param response_obj: The full response object to evaluate
         :return: The relevancy score
         """
-        # Set up evaluators
+        # Set up evaluator
         relevancy_evaluator = RelevancyEvaluator(llm=self.judge_llm)
 
-        # Evaluate for each score
+        # Evaluate for relevancy score
         relevancy_score = relevancy_evaluator.evaluate_response(query=query, response=response_obj)
         return relevancy_score.score
 

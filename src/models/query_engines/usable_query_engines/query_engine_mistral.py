@@ -3,13 +3,12 @@
 # treadwell.d@northeastern.edu
 # query_engine_mistral.py - Child class to use mistral-7b-instruct model as query engine
 
-from src.models.query_engines.query_engine_base_class.query_engine_base import QueryEngine
-from llama_index.core import Settings
+from src.models.query_engines.query_engine_base_class.query_engine_base import QueryEngineBase
 from llama_index.llms.openrouter import OpenRouter
 import os
 
 
-class QueryEngineMistral(QueryEngine):
+class QueryEngineMistral(QueryEngineBase):
     """
     Usable query engine with the mistralai/mistral-7b-instruct LLM model
     """

@@ -13,7 +13,7 @@ from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
 
-class QueryEngine(ABC):
+class QueryEngineBase(ABC):
     """
     Class to manage base queries and responses
     """

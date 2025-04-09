@@ -13,7 +13,7 @@ from llama_index.llms.openrouter import OpenRouter
 MODEL_NAMES = [
     "aaditya/Llama3-OpenBioLLM-8B",
     "meta-llama/llama-3.2-3b-instruct",
-    "sentence-transformers/all-MiniLM-L6-v2",
+    "mistralai/mistral-7b-instruct",
     "qwen/qwen-turbo"
 ]
 

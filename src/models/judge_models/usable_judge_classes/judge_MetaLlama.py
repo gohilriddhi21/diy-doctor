@@ -14,7 +14,7 @@ from llama_index.llms.openrouter import OpenRouter
 from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 
 
-class JudgeMMedLlama(JudgeLLMBase, ABC):
+class JudgeMetaLlama(JudgeLLMBase, ABC):
     """
     Child class to use the MMed-Llama 3 model as a judge LLM
     """

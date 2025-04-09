@@ -3,10 +3,7 @@ from src.backend.database.PatientDAO import PatientDAO
 from src.backend.database.MongoDBConnector import MongoDBConnector
 from dotenv import load_dotenv
 from src.service.node_manager import NodeManager
-from src.models.query_engines.usable_query_engines.query_engine_mistral import QueryEngineMistral
-from src.models.query_engines.usable_query_engines.query_engine_qwen import QueryEngineQwen
-from src.models.query_engines.usable_query_engines.query_engine_MetaLlama import QueryEngineMetaLlama
-from src.models.query_engines.usable_query_engines.query_engine_OpenBio import QueryEngineOpenBio
+from src.models.query_engine import QueryEngine
 
 
 def main(argv):
@@ -27,7 +24,8 @@ def main(argv):
     nodes = node_manager.get_nodes()
 
     # Run test query
-    query_engine = QueryEngineOpenBio(nodes)
+    model_name = "meta-llama/llama-3.2-3b-instruct"
+    query_engine = QueryEngine(model_name, nodes)
     query = "What is the patient's father medical history?"
     print(query_engine.generate_response(query))
 

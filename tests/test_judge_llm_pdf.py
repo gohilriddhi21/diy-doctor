@@ -1,10 +1,9 @@
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.service.node_manager import NodeManager
-from src.models.query_engines.usable_query_engines.query_engine_mistral import QueryEngineMistral
 from dotenv import load_dotenv
-from src.models.judge_models.usable_judge_classes.judge_qwen import JudgeQwen
+from src.models.query_engine import QueryEngine
+from src.models.judge_llm import JudgeLLM
 
 
 def test_success(query_engine, judge_llm_manager, query):
@@ -22,8 +21,11 @@ def main():
     pdf_path = "tests/WebMD.pdf"
     node_manager = NodeManager()
     node_manager.set_nodes_from_pdf(pdf_path)
-    query_engine = QueryEngineMistral(node_manager.get_nodes())
-    judge_llm_manager = JudgeQwen()
+    nodes = node_manager.get_nodes()
+    query_model = "mistralai/mistral-7b-instruct"
+    judge_model = "qwen/qwen-turbo"
+    query_engine = QueryEngine(query_model, nodes)
+    judge_llm_manager = JudgeLLM(judge_model)
     query_1 = "What treatments could be effective for somebody with a migraine?"
     query_2 = "Who is \"BEING MY OWN ADVOCATE\" by?"
     test_success(query_engine, judge_llm_manager, query_1)

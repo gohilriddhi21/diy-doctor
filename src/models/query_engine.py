@@ -1,7 +1,7 @@
 # David Treadwell
 # CS 7180 - Generative AI
 # treadwell.d@northeastern.edu
-# llm_model.py - Contains a class to manage querying with a base model
+# query_engine.py - Class to manage querying
 
 from llama_index.core import VectorStoreIndex, Settings
 from llama_index.core.retrievers import AutoMergingRetriever
@@ -10,16 +10,15 @@ import Stemmer
 from llama_index.core.retrievers import QueryFusionRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.llms.openrouter import OpenRouter
-import os
+from src.models.model_loading_function import load_llm
 
 
 class QueryEngine:
     """
     Class to manage base queries and responses
     """
-    def __init__(self, nodes=None, embed_model_name="sentence-transformers/all-MiniLM-L6-v2",
-                 llm_name="mistralai/mistral-7b-instruct"):
+    def __init__(self, llm_model_name, nodes, embed_model_name="sentence-transformers/all-MiniLM-L6-v2",
+                 max_tokens=512, context_window=4096):
         # Set defaults for variables necessary to generate retrievals
         # Set index and nodes
         self._nodes = nodes
@@ -37,27 +36,49 @@ class QueryEngine:
 
         # Set embedding model
         self._embed_model = HuggingFaceEmbedding(model_name=embed_model_name)
+        Settings.embed_model = self._embed_model
 
         # Set LLM
-        api_key = os.getenv("OPENROUTER_API_KEY")
-        if not api_key:
-            raise ValueError("Missing OpenRouter API key. "
-                             "Set the 'OPENROUTER_API_KEY' environment variable in your \'.env\' file.")
-        self._llm = OpenRouter(api_key=api_key, model=llm_name, max_tokens=512, context_window=4096)
-
-        # Put embedding model and LLM in settings
-        # TODO really would rather parameterize this somewhere, but for now this works
-        Settings.embed_model = self._embed_model
+        self._llm = load_llm(llm_model_name, max_tokens, context_window)
         Settings.llm = self._llm
 
-        # Set message for when queries/settings are attempted without nodes
+        # Set message for when queries/settings are attempted without nodes and LLM
         self._no_nodes_message = "Nodes are not yet initialized. " \
                                  "Initialize nodes via constructor or \"set_query_nodes\" method"
+        self._no_llm_message = "LLM not yet initialized.. " \
+                               "Instantiate the query engine using a child class to set LLM - this class is abstract."
 
         # If nodes were passed in, set the inner variables and retrievers
         if nodes is not None:
             self.set_nodes_and_retrievers(nodes)
             self.update_query_engine(self._default_retriever)
+
+    def get_llm(self):
+        """
+        Returns the LLM being used by the Query Engine
+        :return: Current LLM model
+        """
+        return self._llm
+
+    def initialize_query_engine(self):
+        """
+        Initializes the query engine based on
+        :return: True if initialized successfully, else False
+        """
+        # Check LLM is in settings
+        # TODO really would rather parameterize this somewhere, but for now this works
+        if Settings.llm is None:
+            print(self._no_llm_message)
+            return False
+
+        # If nodes were passed in, set the inner variables and retrievers
+        if self._nodes is not None:
+            self.set_nodes_and_retrievers(self._nodes)
+            self.update_query_engine(self._default_retriever)
+            return True
+        else:
+            print(self._no_nodes_message)
+            return False
 
     def generate_response(self, query):
         """
@@ -113,13 +134,7 @@ class QueryEngine:
                   "auto_merging\n"
                   "bm25\n"
                   "fusion\n")
-
-    def get_llm(self):
-        """
-        Returns the LLM being used by the Query Engine
-        :return: LLM model
-        """
-        return self._llm
+        pass
 
     def _set_retrievers(self):
         """

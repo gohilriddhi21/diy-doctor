@@ -1,10 +1,9 @@
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.service.node_manager import NodeManager
-from src.models.llm_model import QueryEngine
 from dotenv import load_dotenv
-from src.models.judge_models.judge_OpenBioLLM import JudgeOpenBioLLM
+from src.models.query_engine import QueryEngine
+from src.models.judge_llm import JudgeLLM
 
 
 def test_success(query_engine, judge_llm_manager, query):
@@ -20,9 +19,13 @@ def test_success(query_engine, judge_llm_manager, query):
 def main():
     load_dotenv()
     pdf_path = "tests/WebMD.pdf"
-    node_manager = NodeManager(pdf_path)
-    query_engine = QueryEngine(node_manager.get_nodes())
-    judge_llm_manager = JudgeOpenBioLLM()
+    node_manager = NodeManager()
+    node_manager.set_nodes_from_pdf(pdf_path)
+    nodes = node_manager.get_nodes()
+    query_model = "mistralai/mistral-7b-instruct"
+    judge_model = "qwen/qwen-turbo"
+    query_engine = QueryEngine(query_model, nodes)
+    judge_llm_manager = JudgeLLM(judge_model)
     query_1 = "What treatments could be effective for somebody with a migraine?"
     query_2 = "Who is \"BEING MY OWN ADVOCATE\" by?"
     test_success(query_engine, judge_llm_manager, query_1)

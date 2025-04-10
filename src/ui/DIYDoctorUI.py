@@ -62,23 +62,47 @@ def verify_login(username, password):
 
 # Display the login page and handle user authentication.
 def login_page():
+    st.set_page_config(page_title="DIY Doctor", page_icon="🩺")
     st.title("🩺 DIY Doctor: AI-Powered Medical Verification")
-    st.sidebar.title("Login")
-    st.image("testImage.jpg")
+
+    st.sidebar.title("User Login")
+
+    if st.session_state.get('logged_in'):
+        # Already logged in
+        st.sidebar.success(f"👤 Logged in as: {st.session_state['username']}")
+        st.sidebar.info(f"🆔 Patient ID: {st.session_state.get('patient_id', 'N/A')}")
+        if st.sidebar.button("Logout", key="logout_sidebar"):
+            st.session_state['logged_in'] = False
+            st.session_state['username'] = None
+            st.session_state['patient_id'] = None
+            st.rerun()
+        return  # Exit function early if logged in
+
+    st.image("testImage.jpg", use_container_width=True)
+
     username = st.sidebar.text_input("Username")
     password = st.sidebar.text_input("Password", type="password")
-    if st.sidebar.button("Login"):
-        user = verify_login(username, password)
-        if user:
+
+    login_col, bypass_col = st.sidebar.columns([2, 1])
+
+    with login_col:
+        if st.button("🔒 Login"):
+            user = verify_login(username, password)
+            if user:
+                st.session_state['logged_in'] = True
+                st.session_state['username'] = username
+                st.session_state['patient_id'] = user.get("Patient_ID")
+                st.sidebar.success(f"Welcome, {username}!")
+                st.rerun()
+            else:
+                st.sidebar.error("Incorrect Username/Password")
+
+    with bypass_col:
+        if st.button("🚀 Dev", key="bypass_login"):
             st.session_state['logged_in'] = True
-            st.session_state['username'] = username  # Save username in session
-            st.session_state['patient_id'] = user.get("Patient_ID")
-        else:
-            st.sidebar.error("Incorrect Username/Password")
-     # Bypass login button for development purposes
-    if st.sidebar.button("Bypass Login (Dev Only)"):
-        st.session_state['logged_in'] = True
-        st.session_state['username'] = "Developer"
+            st.session_state['username'] = "Developer"
+            st.session_state['patient_id'] = "9999"
+            st.rerun()
 
 def dashboard_page():
     model_dict = {
@@ -88,7 +112,7 @@ def dashboard_page():
         'Qwen Turbo': 'qwen/qwen-turbo'
     }
 
-    st.title(f"DIY Doctor - Welcome {st.session_state['username']}!")
+    st.title(f"Welcome {st.session_state['username']}!")
     st.subheader("Medical Query")
 
     if st.button("Logout", key="logout"):
@@ -117,30 +141,43 @@ def dashboard_page():
     node_manager = NodeManager()
 
     try:
-        llm = load_llm(model_name)
+        with st.spinner('🔄 Loading AI models and patient records...'):
+            llm = load_llm(model_name)
 
-        if not records:
-            st.error("No patient records found for the given patient ID.")
-            return
+            if not records:
+                st.error("❌ No patient records found for the given patient ID.")
+                return
 
-        node_manager.set_nodes_from_patient_data(records)
-        nodes = node_manager.get_nodes()
+            node_manager.set_nodes_from_patient_data(records)
+            nodes = node_manager.get_nodes()
 
-        if nodes:
-            query_engine = QueryEngine(model_name, nodes)
-            judge = JudgeLLM(judgeModel_name)
-            st.success(f"Nodes loaded and query engine initialized for: {selected_model_key}")
-        else:
-            st.error("Failed to generate nodes from patient records.")
+            if nodes:
+                query_engine = QueryEngine(model_name, nodes)
+                judge = JudgeLLM(judgeModel_name)
+                st.success(f"✅ Nodes loaded and query engine initialized for: {selected_model_key}")
+            else:
+                st.error("❌ Failed to generate nodes from patient records.")
     except Exception as e:
-        st.error(f"Failed to initialize models: {str(e)}")
+        st.error(f"❌ Failed to initialize models: {str(e)}")
         return
 
     user_query = st.text_input("Enter your query here:", help="Type your medical question and press evaluate.")
     if st.button('Evaluate Query') and user_query:
         try:
+            # Initialize progress bar
+            progress = st.progress(0, text="Analyzing your query...")
+
+            # Simulate progress (optional: fake small loading for realism)
+            for percent_complete in range(0, 100, 10):
+                progress.progress(percent_complete + 10)
+                import time
+                time.sleep(0.05)
+
             response_obj = query_engine.generate_full_response(user_query)
             verification = judge.verify_suggestions(user_query, response_obj, verbose=True)
+
+            # Remove progress bar after done
+            progress.empty()
 
             if verification == "GOOD":
                 st.success(response_obj.response)
@@ -148,19 +185,18 @@ def dashboard_page():
                 st.error(response_obj.response)
             else:
                 st.warning(response_obj.response)
+
         except Exception as e:
             st.error(f"Error evaluating query: {str(e)}")
             
 def main():
-    st.set_page_config(page_title="DIY Doctor", page_icon="🩺")
     if 'logged_in' not in st.session_state:
         st.session_state['logged_in'] = False
 
-    # Conditional rendering based on login status
+    login_page()
+
     if st.session_state['logged_in']:
         dashboard_page()
-    else:
-        login_page()
 
 if __name__ == "__main__":
     main()

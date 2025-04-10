@@ -10,6 +10,8 @@ from src.models.query_engine import QueryEngine
 from src.models.judge_llm import JudgeLLM
 from src.models.model_loading_function import load_llm
 from src.service.node_manager import NodeManager
+from src.backend.database.PatientDAO import PatientDAO
+from src.backend.database.MongoDBConnector import MongoDBConnector
 
 # Check for required environment variable for the API key
 api_key = os.getenv('OPENROUTER_API_KEY')
@@ -19,6 +21,7 @@ if not api_key:
 # Define the offload directory
 #offload_directory = "C:\\Users\\PC\\Desktop\\Northeastern\\CS 7180\\Final Project\\diy-doctor\\src\\ui\\Offload"
 
+#TODO: Figure out how to connect with patient
 # Setup MongoDB connection
 client = MongoClient("mongodb+srv://genai:genai123@diy-doctor.b82as.mongodb.net/")
  # Database name based on MongoDB
@@ -39,10 +42,11 @@ def verify_login(username, password):
     if user:
         print(f"Found user: {user}")
         print(f"Stored password: {user['password']} - Input password: {password}")
-        return user["password"] == password
+        if user["password"] == password:
+            return user  # return the whole user document!
     else:
         print("No user found with the username:", username)
-    return False
+    return None
 
 # Display the login page and handle user authentication.
 def login_page():
@@ -52,9 +56,11 @@ def login_page():
     username = st.sidebar.text_input("Username")
     password = st.sidebar.text_input("Password", type="password")
     if st.sidebar.button("Login"):
-        if verify_login(username, password):
+        user = verify_login(username, password)
+        if user:
             st.session_state['logged_in'] = True
             st.session_state['username'] = username  # Save username in session
+            st.session_state['patient_id'] = user.get("Patient_ID")
         else:
             st.sidebar.error("Incorrect Username/Password")
      # Bypass login button for development purposes
@@ -85,24 +91,40 @@ def dashboard_page():
     st.subheader("Medical Query")
     # Display model selection
     model_options = list(model_dict.keys())
-    selected_model_key = st.selectbox("Choose an LLM model to use:", model_options, key='model_selector')
+    selected_model_key = st.selectbox("Choose a Query LLM model to use:", model_options, key='model_selector')
     model_name = model_dict[selected_model_key]
-    
-    # Predefined PDF path
-    pdf_path = "C:\\Users\HyPC\\Desktop\\Northeastern\\CS 7180\\Final Project\\diy-doctor\\tests\\WebMD.pdf"
+    judgeSelected_model_key = st.selectbox("Choose a Judge LLM model to use:", model_options, key='judgeSelected_model_key')
+    judgeModel_name = model_dict[judgeSelected_model_key]
+
+    # Connect to database
+    CONFIG_FILE_PATH = "config/config.yaml"
+    db_connector = MongoDBConnector(CONFIG_FILE_PATH)
+    patient_dao = PatientDAO(db_connector)
+    #TODO: get from user login
+    existent_patient_id = st.session_state.get('patient_id')
+    #pdf_path = "C:\\Users\HyPC\\Desktop\\Northeastern\\CS 7180\\Final Project\\diy-doctor\\tests\\WebMD.pdf"
     # Instantiate NodeManager and load models
+    records = patient_dao.get_patient_records_from_all_collections(existent_patient_id)
+    print("Fetched patient records:", records)
+    st.write(records)
     node_manager = NodeManager()
     try:
         llm = load_llm(model_name)
-        node_manager.set_nodes_from_pdf(pdf_path)
+        print(f"Records retrieved: {records}")
+
+        if not records:
+            st.error("No patient records found for the given patient ID.")
+            return
+        node_manager.set_nodes_from_patient_data(records)
         nodes = node_manager.get_nodes()
         
         if nodes:
+            #TODO: mess with context window and etc. for OPenBIo
             query_engine = QueryEngine(model_name, nodes)
-            judge = JudgeLLM(model_name)
+            judge = JudgeLLM(judgeModel_name)
             st.success(f"Nodes loaded and query engine initialized for: {selected_model_key}")
         else:
-            st.error("Failed to load nodes from PDF. Please check the predefined path and PDF content.")
+            st.error("Failed to generate nodes from patient records. Please verify patient data.")
     except Exception as e:
         st.error(f"Failed to initialize components for {selected_model_key}: {str(e)}")
         return
@@ -115,14 +137,13 @@ def dashboard_page():
             verification = judge.verify_suggestions(user_query, response_obj, verbose=True)
             
             if verification == "GOOD":
-                st.success(response_obj['response'])
+                st.success(response_obj.response)
             elif verification == "BAD":
-                st.error(response_obj['response'])
+                st.error(response_obj.response)
             else:
-                st.warning(response_obj['response'])
+                st.warning(response_obj.response)
         except Exception as e:
             st.error(f"Error in processing query: {str(e)}")
-
             
 def main():
     st.set_page_config(page_title="DIY Doctor", page_icon="🩺")

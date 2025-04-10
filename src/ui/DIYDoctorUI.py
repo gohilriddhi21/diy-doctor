@@ -18,17 +18,29 @@ api_key = os.getenv('OPENROUTER_API_KEY')
 if not api_key:
     raise ValueError("Missing OpenRouter API key. Please set the OPENROUTER_API_KEY environment variable.")
 
-# Define the offload directory
-#offload_directory = "C:\\Users\\PC\\Desktop\\Northeastern\\CS 7180\\Final Project\\diy-doctor\\src\\ui\\Offload"
-
 #TODO: Figure out how to connect with patient
-# Setup MongoDB connection
-client = MongoClient("mongodb+srv://genai:genai123@diy-doctor.b82as.mongodb.net/")
- # Database name based on MongoDB
-db = client["diy-doctor"] 
-# Collection name based on MongoDB
-users = db.login  
-print(db.list_collection_names())
+# Connect to MongoDB
+CONFIG_FILE_PATH = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'config.yaml')
+)
+try:
+    db_connector = MongoDBConnector(CONFIG_FILE_PATH)
+    db = db_connector.get_database()
+
+    if db is None:
+        st.error("Database connection failed. Database object is None. Check config format or connection.")
+        st.stop()
+
+except FileNotFoundError:
+    st.error(f"Configuration file not found at {CONFIG_FILE_PATH}.")
+    st.stop()
+
+except Exception as e:
+    st.error(f"Database connection failed due to unexpected error: {str(e)}")
+    st.stop()
+
+users = db["login"]
+patient_dao = PatientDAO(db_connector)
 
 # Verify if a user's login credentials are correct
 # Params: 
@@ -75,67 +87,61 @@ def dashboard_page():
         'Mistral': 'mistralai/mistral-7b-instruct',
         'Qwen Turbo': 'qwen/qwen-turbo'
     }
-    
-    # Create a row at the top for the welcome message and logout button
-    header_cols = st.columns([0.85, 0.15])
-    with header_cols[0]:
-        st.title(f"DIY Doctor - Welcome {st.session_state['username']}!")
-    with header_cols[1]:
-        if st.button("Logout", key="logout"):
-            # Reset the session state to log the user out
-            st.session_state['logged_in'] = False
-            st.session_state['username'] = None
-            # Redirect to the login page
-            st.experimental_rerun()
 
+    st.title(f"DIY Doctor - Welcome {st.session_state['username']}!")
     st.subheader("Medical Query")
-    # Display model selection
-    model_options = list(model_dict.keys())
-    selected_model_key = st.selectbox("Choose a Query LLM model to use:", model_options, key='model_selector')
+
+    if st.button("Logout", key="logout"):
+        st.session_state['logged_in'] = False
+        st.session_state['username'] = None
+        st.session_state['patient_id'] = None
+        st.experimental_rerun()
+
+    selected_model_key = st.selectbox("Choose a Query LLM model to use:", list(model_dict.keys()))
     model_name = model_dict[selected_model_key]
-    judgeSelected_model_key = st.selectbox("Choose a Judge LLM model to use:", model_options, key='judgeSelected_model_key')
+
+    judgeSelected_model_key = st.selectbox("Choose a Judge LLM model to use:", list(model_dict.keys()), key='judgeSelected')
     judgeModel_name = model_dict[judgeSelected_model_key]
 
-    # Connect to database
-    CONFIG_FILE_PATH = "config/config.yaml"
-    db_connector = MongoDBConnector(CONFIG_FILE_PATH)
-    patient_dao = PatientDAO(db_connector)
-    #TODO: get from user login
     existent_patient_id = st.session_state.get('patient_id')
-    #pdf_path = "C:\\Users\HyPC\\Desktop\\Northeastern\\CS 7180\\Final Project\\diy-doctor\\tests\\WebMD.pdf"
-    # Instantiate NodeManager and load models
+
+    if existent_patient_id is None:
+        st.error("No patient ID found. Please login properly.")
+        return
+
+    st.info(f"Looking up patient records for ID: {existent_patient_id}")
+
     records = patient_dao.get_patient_records_from_all_collections(existent_patient_id)
-    print("Fetched patient records:", records)
-    st.write(records)
+    st.write("Fetched patient records:", records)
+
     node_manager = NodeManager()
+
     try:
         llm = load_llm(model_name)
-        print(f"Records retrieved: {records}")
 
         if not records:
             st.error("No patient records found for the given patient ID.")
             return
+
         node_manager.set_nodes_from_patient_data(records)
         nodes = node_manager.get_nodes()
-        
+
         if nodes:
-            #TODO: mess with context window and etc. for OPenBIo
             query_engine = QueryEngine(model_name, nodes)
             judge = JudgeLLM(judgeModel_name)
             st.success(f"Nodes loaded and query engine initialized for: {selected_model_key}")
         else:
-            st.error("Failed to generate nodes from patient records. Please verify patient data.")
+            st.error("Failed to generate nodes from patient records.")
     except Exception as e:
-        st.error(f"Failed to initialize components for {selected_model_key}: {str(e)}")
+        st.error(f"Failed to initialize models: {str(e)}")
         return
 
-    # User input for queries and processing
-    user_query = st.text_input("Enter your query here:", help="Type your query and press evaluate.")
+    user_query = st.text_input("Enter your query here:", help="Type your medical question and press evaluate.")
     if st.button('Evaluate Query') and user_query:
         try:
             response_obj = query_engine.generate_full_response(user_query)
             verification = judge.verify_suggestions(user_query, response_obj, verbose=True)
-            
+
             if verification == "GOOD":
                 st.success(response_obj.response)
             elif verification == "BAD":
@@ -143,7 +149,7 @@ def dashboard_page():
             else:
                 st.warning(response_obj.response)
         except Exception as e:
-            st.error(f"Error in processing query: {str(e)}")
+            st.error(f"Error evaluating query: {str(e)}")
             
 def main():
     st.set_page_config(page_title="DIY Doctor", page_icon="🩺")

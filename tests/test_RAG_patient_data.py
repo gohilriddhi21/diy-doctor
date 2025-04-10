@@ -1,10 +1,12 @@
 import sys
+import os
 from src.backend.database.PatientDAO import PatientDAO
 from src.backend.database.MongoDBConnector import MongoDBConnector
 from dotenv import load_dotenv
 from src.service.node_manager import NodeManager
 from src.models.query_engine import QueryEngine
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def main(argv):
     load_dotenv()

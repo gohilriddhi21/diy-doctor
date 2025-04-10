@@ -6,10 +6,10 @@ from transformers import pipeline
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-from src.models.judge_models.judge_OpenBioLLM import JudgeOpenBioLLM
-from src.models.judge_models.judge_MMedLlama import JudgeMMedLlama
-from src.models.judge_models.judge_qwen import JudgeQwen
-from src.models.llm_model import QueryEngine
+from src.models.query_engine import QueryEngine
+from src.models.judge_llm import JudgeLLM
+from src.models.model_loading_function import load_llm
+from src.service.node_manager import NodeManager
 
 # Check for required environment variable for the API key
 api_key = os.getenv('OPENROUTER_API_KEY')
@@ -27,14 +27,6 @@ db = client["diy-doctor"]
 users = db.login  
 print(db.list_collection_names())
 
-# Declaring Global Variables 
-query_engine = QueryEngine()
-
-# judge_models = {
-#     "MMed-Llama": JudgeMMedLlama(),
-#     "Qwen": JudgeQwen(),
-#     "OpenBioLLM": JudgeOpenBioLLM()
-# }
 # Verify if a user's login credentials are correct
 # Params: 
 #  - username (str): The username of the user trying to log in.
@@ -70,14 +62,14 @@ def login_page():
         st.session_state['logged_in'] = True
         st.session_state['username'] = "Developer"
 
-def process_query(query):
-    # Initialize QueryEngine
-    query_engine = QueryEngine()
-    # Process the query through the Query Engine
-    response = query_engine.generate_response(query)
-    return response
-
 def dashboard_page():
+    model_dict = {
+        'OpenBio': 'aaditya/Llama3-OpenBioLLM-8B',
+        'Meta Llama': 'meta-llama/llama-3.2-3b-instruct',
+        'Mistral': 'mistralai/mistral-7b-instruct',
+        'Qwen Turbo': 'qwen/qwen-turbo'
+    }
+    
     # Create a row at the top for the welcome message and logout button
     header_cols = st.columns([0.85, 0.15])
     with header_cols[0]:
@@ -91,54 +83,46 @@ def dashboard_page():
             st.experimental_rerun()
 
     st.subheader("Medical Query")
-    query = st.text_input("Enter your medical concern here:")
-    if st.button("Submit Query"):
-        # Ensure there is a query before processing
-        if query:
-            # Generate response
-            response = process_query(query)
-            st.write("Response:", response)
+    # Display model selection
+    model_options = list(model_dict.keys())
+    selected_model_key = st.selectbox("Choose an LLM model to use:", model_options, key='model_selector')
+    model_name = model_dict[selected_model_key]
+    
+    # Predefined PDF path
+    pdf_path = "C:\\Users\HyPC\\Desktop\\Northeastern\\CS 7180\\Final Project\\diy-doctor\\tests\\WebMD.pdf"
+    # Instantiate NodeManager and load models
+    node_manager = NodeManager()
+    try:
+        llm = load_llm(model_name)
+        node_manager.set_nodes_from_pdf(pdf_path)
+        nodes = node_manager.get_nodes()
+        
+        if nodes:
+            query_engine = QueryEngine(model_name, nodes)
+            judge = JudgeLLM(model_name)
+            st.success(f"Nodes loaded and query engine initialized for: {selected_model_key}")
         else:
-            st.error("Please enter a query to process.")
-# def process_query(query, query_model, judge_model):
-#     # Step 1: Process the query through the Query Engine
-#     # You might need to select different configurations or models based on 'query_model' parameter
-#     response = query_engine.generate_response(query)
-    
-#     # Step 2: Judge the response using the selected Judge Model
-#     # Depending on the model selected, use that to judge the response
-#     judge_instance = judge_models[judge_model]
-#     faithfulness_score = judge_instance.evaluate_faithfulness(response)
-#     relevancy_score = judge_instance.evaluate_relevancy(query, response)
-    
-#     # Simplified output
-#     judgment = f"Faithfulness: {faithfulness_score}, Relevancy: {relevancy_score}"
-#     return response, judgment
+            st.error("Failed to load nodes from PDF. Please check the predefined path and PDF content.")
+    except Exception as e:
+        st.error(f"Failed to initialize components for {selected_model_key}: {str(e)}")
+        return
 
-# def dashboard_page():
-#     # Create a row at the top for the welcome message and logout button
-#     header_cols = st.columns([0.85, 0.15])
-#     with header_cols[0]:
-#         st.title(f"DIY Doctor - Welcome {st.session_state['username']}!")
-#     with header_cols[1]:
-#         if st.button("Logout", key="logout"):
-#             # Reset the session state to log the user out
-#             st.session_state['logged_in'] = False
-#             st.session_state['username'] = None
-#             # Redirect to the login page
-#             st.experimental_rerun()
-#     st.subheader("Medical Query")
-#     query = st.text_input("Enter your medical query here:")
-#     if st.button("Submit Query"):
-#         # Ensure there is a query before processing
-#         if query:
-#             # Initialize QueryEngine
-#             query_engine = QueryEngine()
-#             # Generate response
-#             response = query_engine.generate_response(query)
-#             st.write("Response:", response)
-#         else:
-#             st.error("Please enter a query to process.")
+    # User input for queries and processing
+    user_query = st.text_input("Enter your query here:", help="Type your query and press evaluate.")
+    if st.button('Evaluate Query') and user_query:
+        try:
+            response_obj = query_engine.generate_full_response(user_query)
+            verification = judge.verify_suggestions(user_query, response_obj, verbose=True)
+            
+            if verification == "GOOD":
+                st.success(response_obj['response'])
+            elif verification == "BAD":
+                st.error(response_obj['response'])
+            else:
+                st.warning(response_obj['response'])
+        except Exception as e:
+            st.error(f"Error in processing query: {str(e)}")
+
             
 def main():
     st.set_page_config(page_title="DIY Doctor", page_icon="🩺")

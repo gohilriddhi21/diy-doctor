@@ -83,7 +83,7 @@ def _load_hugging_face_model(model_name, max_tokens, context_window):
         offload_path = os.path.abspath(
             os.path.join(os.path.dirname(__file__), '..', '..', 'offload')
         )
-        os.makedirs(offload_path, exist_ok=True)  # ✅ Create it if missing
+        os.makedirs(offload_path, exist_ok=True)  # Create it if missing
 
         llm = HuggingFaceLLM(
             model_name=model_name,
@@ -91,7 +91,7 @@ def _load_hugging_face_model(model_name, max_tokens, context_window):
             max_new_tokens=max_tokens,
             context_window=2048,   # Smaller window for OpenBio
             model_kwargs={
-                "offload_folder": offload_path,   # 🛠 use correct full path
+                "offload_folder": offload_path,   
                 "trust_remote_code": True
             }
         )

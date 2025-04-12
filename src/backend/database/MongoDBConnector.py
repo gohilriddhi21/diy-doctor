@@ -30,17 +30,30 @@ class MongoDBConnector:
 
     def _connect(self):
         logger.info("Connecting to MongoDB...")
+
         if not self.mongo_uri or not self.database_name:
             logger.error("MongoDB URI or database name not found in configuration.")
+            print("[DEBUG] Missing URI or database name.")
             return
 
         try:
+            print("[DEBUG] Mongo URI being used:", self.mongo_uri)
+            print("[DEBUG] Database name:", self.database_name)
+
             self.client = MongoClient(self.mongo_uri, serverSelectionTimeoutMS=3000)
-            self.client.admin.command("ping")  # Force connection check
+            print("[DEBUG] MongoClient created.")
+
+            self.client.admin.command("ping")
+            print("[DEBUG] Ping successful.")
+
             self.db = self.client[self.database_name]
+            print("[DEBUG] Database object set successfully:", self.db)
+
             logger.info(f"Connected to MongoDB database: {self.database_name}")
+
         except Exception as e:
             logger.error(f"Error connecting to MongoDB: {e}")
+            print("[ERROR] Exception during Mongo connection:", str(e))
             self.close()
 
     def close(self):
@@ -53,3 +66,7 @@ class MongoDBConnector:
                 logger.info("MongoDB connection closed.")
         except Exception as e:
             logger.error(f"Error closing MongoDB connection: {e}")
+    
+    def get_database(self):
+        print("get_database() called")
+        return self.db

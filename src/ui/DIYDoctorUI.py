@@ -1,15 +1,46 @@
+import os
+import sys
 import streamlit as st
 from pymongo import MongoClient
 from transformers import pipeline
-from src.models.judge_models.base.judge_llm_base import JudgeOpenBioLLM
 
-# Setup MongoDB connection
-client = MongoClient("mongodb+srv://genai:genai123@diy-doctor.b82as.mongodb.net/")
- # Database name based on MongoDB
-db = client["diy-doctor"] 
-# Collection name based on MongoDB
-users = db.login  
-print(db.list_collection_names())
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
+from src.models.query_engine import QueryEngine
+from src.models.judge_llm import JudgeLLM
+from src.models.model_loading_function import load_llm
+from src.service.node_manager import NodeManager
+from src.backend.database.PatientDAO import PatientDAO
+from src.backend.database.MongoDBConnector import MongoDBConnector
+
+# Check for required environment variable for the API key
+api_key = os.getenv('OPENROUTER_API_KEY')
+if not api_key:
+    raise ValueError("Missing OpenRouter API key. Please set the OPENROUTER_API_KEY environment variable.")
+
+#TODO: Figure out how to connect with patient
+# Connect to MongoDB
+CONFIG_FILE_PATH = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'config.yaml')
+)
+try:
+    db_connector = MongoDBConnector(CONFIG_FILE_PATH)
+    db = db_connector.get_database()
+
+    if db is None:
+        st.error("Database connection failed. Database object is None. Check config format or connection.")
+        st.stop()
+
+except FileNotFoundError:
+    st.error(f"Configuration file not found at {CONFIG_FILE_PATH}.")
+    st.stop()
+
+except Exception as e:
+    st.error(f"Database connection failed due to unexpected error: {str(e)}")
+    st.stop()
+
+users = db["login"]
+patient_dao = PatientDAO(db_connector)
 
 # Verify if a user's login credentials are correct
 # Params: 
@@ -23,113 +54,149 @@ def verify_login(username, password):
     if user:
         print(f"Found user: {user}")
         print(f"Stored password: {user['password']} - Input password: {password}")
-        return user["password"] == password
+        if user["password"] == password:
+            return user  # return the whole user document!
     else:
         print("No user found with the username:", username)
-    return False
+    return None
 
 # Display the login page and handle user authentication.
 def login_page():
-    st.sidebar.title("Login")
-    username = st.sidebar.text_input("Username")
-    password = st.sidebar.text_input("Password", type="password")
-    if st.sidebar.button("Login"):
-        if verify_login(username, password):
-            st.session_state['logged_in'] = True
-            st.session_state['username'] = username  # Save username in session
-        else:
-            st.sidebar.error("Incorrect Username/Password")
-     # Bypass login button for development purposes
-    if st.sidebar.button("Bypass Login (Dev Only)"):
-        st.session_state['logged_in'] = True
-        st.session_state['username'] = "Developer"
+    st.set_page_config(page_title="DIY Doctor", page_icon="🩺")
+    st.title("🩺 DIY Doctor: AI-Powered Medical Verification")
 
-def get_response(model_name, user_query):
-    # Initialize the generator
-    generator = pipeline('text-generation', model=model_name)
-    # Generate response
-    results = generator(user_query, max_length=100, num_return_sequences=1, truncation=True)
-    # Return a dictionary with the response and a dummy score
-    return {'response': results[0]['generated_text'], 'score': 1.0}
+    st.sidebar.title("User Login")
 
-# Display the dashboard page to the logged-in user.
-def dashboard_page():
-    model_dict = {
-        'OpenBio': ('aaditya/Llama3-OpenBioLLM-8B', JudgeOpenBioLLM),
-        'Model 2': ('model_2_identifier', JudgeOpenBioLLM),
-        'Model 3': ('model_3_identifier', JudgeOpenBioLLM)
-    }
-    # Create a row at the top for the welcome message and logout button
-    header_cols = st.columns([0.85, 0.15])  
-    with header_cols[0]:
-        st.title(f"DIY Doctor - Welcome {st.session_state['username']}!")
-    with header_cols[1]:
-        if st.button("Logout", key="logout"):
-            # Reset the session state to log the user out
+    if st.session_state.get('logged_in'):
+        # Already logged in
+        st.sidebar.success(f"👤 Logged in as: {st.session_state['username']}")
+        st.sidebar.info(f"🆔 Patient ID: {st.session_state.get('patient_id', 'N/A')}")
+        if st.sidebar.button("Logout", key="logout_sidebar"):
             st.session_state['logged_in'] = False
             st.session_state['username'] = None
-            # Redirect to the login page
-            st.experimental_rerun()
+            st.session_state['patient_id'] = None
+            st.rerun()
+        return  # Exit function early if logged in
 
-    st.write("This is your medical dashboard.")
+    st.image("testImage.jpg", use_container_width=True)
 
-    # Adding model selector for llm models
-    model_options = list(model_dict.keys())
-    selected_model = st.selectbox("Choose an LLM model to use:", model_options, key='model_selector')
-    currentSelectedModel_name, JudgeClass = model_dict[selected_model]
+    username = st.sidebar.text_input("Username")
+    password = st.sidebar.text_input("Password", type="password")
 
-     # Initialize the judge LLM based on selected model
+    login_col, bypass_col = st.sidebar.columns([2, 1])
+
+    with login_col:
+        if st.button("🔒 Login"):
+            user = verify_login(username, password)
+            if user:
+                st.session_state['logged_in'] = True
+                st.session_state['username'] = username
+                st.session_state['patient_id'] = user.get("Patient_ID")
+                st.sidebar.success(f"Welcome, {username}!")
+                st.rerun()
+            else:
+                st.sidebar.error("Incorrect Username/Password")
+
+    with bypass_col:
+        if st.button("🚀 Dev", key="bypass_login"):
+            st.session_state['logged_in'] = True
+            st.session_state['username'] = "Developer"
+            st.session_state['patient_id'] = "9999"
+            st.rerun()
+
+def dashboard_page():
+    model_dict = {
+        'OpenBio': 'aaditya/Llama3-OpenBioLLM-8B',
+        'Meta Llama': 'meta-llama/llama-3.2-3b-instruct',
+        'Mistral': 'mistralai/mistral-7b-instruct',
+        'Qwen Turbo': 'qwen/qwen-turbo'
+    }
+
+    st.title(f"Welcome {st.session_state['username']}!")
+    st.subheader("Medical Query")
+
+    if st.button("Logout", key="logout"):
+        st.session_state['logged_in'] = False
+        st.session_state['username'] = None
+        st.session_state['patient_id'] = None
+        st.experimental_rerun()
+
+    selected_model_key = st.selectbox("Choose a Query LLM model to use:", list(model_dict.keys()))
+    model_name = model_dict[selected_model_key]
+
+    judgeSelected_model_key = st.selectbox("Choose a Judge LLM model to use:", list(model_dict.keys()), key='judgeSelected')
+    judgeModel_name = model_dict[judgeSelected_model_key]
+
+    existent_patient_id = st.session_state.get('patient_id')
+
+    if existent_patient_id is None:
+        st.error("No patient ID found. Please login properly.")
+        return
+
+    st.info(f"Looking up patient records for ID: {existent_patient_id}")
+
+    records = patient_dao.get_patient_records_from_all_collections(existent_patient_id)
+    st.write("Fetched patient records:", records)
+
+    node_manager = NodeManager()
+
     try:
-        judge = JudgeClass(model_name=currentSelectedModel_name)
-        st.write(f"Judge LLM Initialized for {selected_model}.")
-    except Exception as e:
-        st.error(f"Failed to initialize the model: {e}")
+        with st.spinner('🔄 Loading AI models and patient records...'):
+            llm = load_llm(model_name)
 
-    # Query input and evaluation
-    user_query = st.text_input("Enter your medical query here:", help="E.g., 'What are the symptoms of the flu?'")
+            if not records:
+                st.error("❌ No patient records found for the given patient ID.")
+                return
+
+            node_manager.set_nodes_from_patient_data(records)
+            nodes = node_manager.get_nodes()
+
+            if nodes:
+                query_engine = QueryEngine(model_name, nodes)
+                judge = JudgeLLM(judgeModel_name)
+                st.success(f"✅ Nodes loaded and query engine initialized for: {selected_model_key}")
+            else:
+                st.error("❌ Failed to generate nodes from patient records.")
+    except Exception as e:
+        st.error(f"❌ Failed to initialize models: {str(e)}")
+        return
+
+    user_query = st.text_input("Enter your query here:", help="Type your medical question and press evaluate.")
     if st.button('Evaluate Query') and user_query:
         try:
-             # Generate response using the LLM
-            response_obj = get_response(currentSelectedModel_name, user_query)
-            print(response_obj)
-            # Evaluate the response using the Judge LLM
+            # Initialize progress bar
+            progress = st.progress(0, text="Analyzing your query...")
+
+            # Simulate progress (optional: fake small loading for realism)
+            for percent_complete in range(0, 100, 10):
+                progress.progress(percent_complete + 10)
+                import time
+                time.sleep(0.05)
+
+            response_obj = query_engine.generate_full_response(user_query)
             verification = judge.verify_suggestions(user_query, response_obj, verbose=True)
 
-            # Display the response and evaluation
-            if verification == "GOOD":
-                st.success(response_obj['response'])
-            elif verification == "BAD":
-                st.error(response_obj['response'])
-            else:
-                st.warning(response_obj['response'])
-        except Exception as e:
-            st.error(f"Error generating response: {e}")
+            # Remove progress bar after done
+            progress.empty()
 
+            if verification == "GOOD":
+                st.success(response_obj.response)
+            elif verification == "BAD":
+                st.error(response_obj.response)
+            else:
+                st.warning(response_obj.response)
+
+        except Exception as e:
+            st.error(f"Error evaluating query: {str(e)}")
+            
 def main():
     if 'logged_in' not in st.session_state:
         st.session_state['logged_in'] = False
 
-    # Conditional rendering based on login status
+    login_page()
+
     if st.session_state['logged_in']:
         dashboard_page()
-    else:
-        login_page()
 
 if __name__ == "__main__":
     main()
-
-# uploadFile = st.file_uploader("Choose a file", type=['jpg', 'png', 'jpeg'])
-# if uploadFile is not None:
-#     # Display the uploaded image
-#     st.image(uploadFile, caption='Uploaded ID')
-
-#     # Create an EasyOCR reader
-#     reader = easyocr.Reader(['en']) 
-
-#     # Perform OCR on the uploaded image and extract text
-#     results = reader.readtext(uploadFile.getvalue()) 
-
-#     # Display OCR results
-#     for result in results:
-#         position, text, confidence = result
-#         st.write(f"Extracted Text: {text}, Confidence: {confidence:.2f}")

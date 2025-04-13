@@ -24,13 +24,8 @@ class QueryEngine:
         self._nodes = nodes
         self._index = None
 
-        # Set retrievers
-        self._base_retriever = None
-        self._auto_merging_retriever = None
-        self._bm25_retriever = None
-        self._fusion_retriever = None
-
         # Set the default engine
+        self._retriever = None
         self._query_engine = None
         self._default_retriever = "fusion"
 
@@ -50,7 +45,7 @@ class QueryEngine:
 
         # If nodes were passed in, set the inner variables and retrievers
         if nodes is not None:
-            self.set_nodes_and_retrievers(nodes)
+            self.set_nodes(nodes)
             self.update_query_engine(self._default_retriever)
 
     def get_llm(self):
@@ -66,14 +61,13 @@ class QueryEngine:
         :return: True if initialized successfully, else False
         """
         # Check LLM is in settings
-        # TODO really would rather parameterize this somewhere, but for now this works
         if Settings.llm is None:
             print(self._no_llm_message)
             return False
 
         # If nodes were passed in, set the inner variables and retrievers
         if self._nodes is not None:
-            self.set_nodes_and_retrievers(self._nodes)
+            self.set_nodes(self._nodes)
             self.update_query_engine(self._default_retriever)
             return True
         else:
@@ -103,31 +97,33 @@ class QueryEngine:
             response_obj = "No query provided! Please enter a query and try again."
         return response_obj
 
-    def set_nodes_and_retrievers(self, nodes):
+    def set_nodes(self, nodes):
         """
-        Sets the nodes and retrievers managed by the query engine
+        Sets the nodes and index managed by the query engine
         :param nodes: The nodes to use as context
         :return: None
         """
         self._nodes = nodes
         self._index = VectorStoreIndex(nodes)
-        self._query_engine = self._index.as_query_engine()
-        self._set_retrievers()
 
-    def update_query_engine(self, retriever):  # TODO could improve how engine selected
+    def update_query_engine(self, retriever):
         """
         Sets which query engine is the default for queries
         :param retriever: The name of the retriever to use in the engine
         :return: None
         """
         if retriever == "base":
-            self._query_engine = RetrieverQueryEngine.from_args(self._base_retriever)
+            self._retriever = self._get_base_retriever()
+            self._query_engine = RetrieverQueryEngine.from_args(self._retriever)
         elif retriever == "auto_merging":
-            self._query_engine = RetrieverQueryEngine.from_args(self._auto_merging_retriever)
+            self._retriever = self._get_auto_merging_retriever()
+            self._query_engine = RetrieverQueryEngine.from_args(self._retriever)
         elif retriever == "bm25":
-            self._query_engine = RetrieverQueryEngine.from_args(self._bm25_retriever)
+            self._retriever = self._get_bm25_retriever()
+            self._query_engine = RetrieverQueryEngine.from_args(self._retriever)
         elif retriever == "fusion":
-            self._query_engine = RetrieverQueryEngine.from_args(self._fusion_retriever)
+            self._retriever = self._get_fusion_retriever()
+            self._query_engine = RetrieverQueryEngine.from_args(self._retriever)
         else:
             print("ERROR! Invalid retriever name. Only pass in a retriever name from the list below:\n"
                   "base\n"
@@ -136,47 +132,34 @@ class QueryEngine:
                   "fusion\n")
         pass
 
-    def _set_retrievers(self):
-        """
-        Sets all retrievers if nodes are passed in
-        :return: None
-        """
-        if self._nodes is not None:
-            self._set_base_retriever()
-            self._set_auto_merging_retriever()
-            self._set_bm25_retriever()
-            self._set_fusion_retriever()
-        else:
-            print(self._no_nodes_message)
-
-    def _set_base_retriever(self, similarity_top_k=1):
+    def _get_base_retriever(self, similarity_top_k=1):
         """
         Creates a base retriever object
         :param similarity_top_k: Top k chunks to use as context
         :return: None
         """
-        self._base_retriever = self._index.as_retriever(similarity_top_k=similarity_top_k)
+        return self._index.as_retriever(similarity_top_k=similarity_top_k)
 
-    def _set_auto_merging_retriever(self, similarity_top_k=3):
+    def _get_auto_merging_retriever(self, similarity_top_k=3):
         """
         Creates an auto merging retriever object
         :param similarity_top_k: Top k chunks to use as context
         :return: None
         """
         auto_base_retriever = self._index.as_retriever(similarity_top_k=similarity_top_k)
-        self._auto_merging_retriever = AutoMergingRetriever(auto_base_retriever, self._index.storage_context)
+        return AutoMergingRetriever(auto_base_retriever, self._index.storage_context)
 
-    def _set_bm25_retriever(self, similarity_top_k=2, language="english"):
+    def _get_bm25_retriever(self, similarity_top_k=2, language="english"):
         """
         Creates a bm25 retriever object
         :param similarity_top_k: Top k chunks to use as context
         :param language: language of the nodes being parsed
         :return: None
         """
-        self._bm25_retriever = BM25Retriever.from_defaults(nodes=self._nodes, similarity_top_k=similarity_top_k,
-                                                           stemmer=Stemmer.Stemmer(language), language=language)
+        return BM25Retriever.from_defaults(nodes=self._nodes, similarity_top_k=similarity_top_k,
+                                           stemmer=Stemmer.Stemmer(language), language=language)
 
-    def _set_fusion_retriever(self, similarity_top_k=4, num_queries=1, vector_weight=0.4, lexical_weight=0.6):
+    def _get_fusion_retriever(self, similarity_top_k=4, num_queries=1, vector_weight=0.4, lexical_weight=0.6):
         """
         Creates a fusion retriever based on a vector-based (AutoMerging Retriever) and lexical-based (BM25 Retriever) retrievers
         The weights for vector and lexical methods should add up to 1.0
@@ -197,7 +180,7 @@ class QueryEngine:
                                                                language='english')
 
         # Create the fusion retriever
-        self._fusion_retriever = QueryFusionRetriever(
+        return QueryFusionRetriever(
             retrievers=[fusion_vector_retriever, fusion_lexical_retriever],
             similarity_top_k=similarity_top_k,
             num_queries=num_queries,

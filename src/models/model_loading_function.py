@@ -15,7 +15,8 @@ MODEL_NAMES = [
     "meta-llama/llama-3.2-3b-instruct",
     "mistralai/mistral-7b-instruct",
     "qwen/qwen-turbo",
-    "Henrychur/MMed-Llama-3-8B"
+    "Henrychur/MMed-Llama-3-8B",
+    "bigcode/starcoder2-7b"
 ]
 
 # Set model access indexes
@@ -24,6 +25,7 @@ META_LLAMA_INDEX = 1
 MISTRAL_INDEX = 2
 QWEN_INDEX = 3
 MMED_LLAMA = 4
+STARCODER2_INDEX = 5
 
 
 def load_llm(model_name, max_tokens=512, context_window=4096):
@@ -49,7 +51,9 @@ def load_llm(model_name, max_tokens=512, context_window=4096):
 
     elif model_name == MODEL_NAMES[MMED_LLAMA]:
         return _load_hugging_face_model(model_name, max_tokens, context_window=1024)
-
+    
+    elif model_name == MODEL_NAMES[STARCODER2_INDEX]:
+        return _load_openrouter_model(model_name, max_tokens, context_window)
     # Error case where model name is invalid
     else:
         print("ERROR! Invalid model name. Please select a valid name from the list of pre-defined models")

@@ -8,6 +8,7 @@ from src.models.query_engine import QueryEngine
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+
 def main(argv):
     load_dotenv()
 
@@ -26,7 +27,7 @@ def main(argv):
     nodes = node_manager.get_nodes()
 
     # Run test query
-    model_name = "meta-llama/llama-3.2-3b-instruct"
+    model_name = "Henrychur/MMed-Llama-3-8B"
     query_engine = QueryEngine(model_name, nodes)
     query = "What is the patient's father medical history?"
     print(query_engine.generate_response(query))

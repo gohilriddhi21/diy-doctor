@@ -14,7 +14,8 @@ MODEL_NAMES = [
     "aaditya/Llama3-OpenBioLLM-8B",
     "meta-llama/llama-3.2-3b-instruct",
     "mistralai/mistral-7b-instruct",
-    "qwen/qwen-turbo"
+    "qwen/qwen-turbo",
+    "Henrychur/MMed-Llama-3-8B"
 ]
 
 # Set model access indexes
@@ -22,6 +23,7 @@ OPENBIO_INDEX = 0
 META_LLAMA_INDEX = 1
 MISTRAL_INDEX = 2
 QWEN_INDEX = 3
+MMED_LLAMA = 4
 
 
 def load_llm(model_name, max_tokens=512, context_window=4096):
@@ -43,7 +45,10 @@ def load_llm(model_name, max_tokens=512, context_window=4096):
         return _load_openrouter_model(model_name, max_tokens, context_window)
 
     elif model_name == MODEL_NAMES[QWEN_INDEX]:
-        return _load_openrouter_model(model_name, max_tokens, context_window)
+        return _load_openrouter_model(model_name, max_tokens, context_window=2048)
+
+    elif model_name == MODEL_NAMES[MMED_LLAMA]:
+        return _load_hugging_face_model(model_name, max_tokens, context_window=1024)
 
     # Error case where model name is invalid
     else:
@@ -81,7 +86,7 @@ def _load_hugging_face_model(model_name, max_tokens, context_window):
     if model_name == MODEL_NAMES[OPENBIO_INDEX]:
         # Build path to 'offload' folder relative to this file's location
         offload_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), '..', '..', 'offload')
+            os.path.join(os.path.dirname(__file__), '..', '..', 'offload_open_bio')
         )
         os.makedirs(offload_path, exist_ok=True)  # Create it if missing
 
@@ -89,7 +94,7 @@ def _load_hugging_face_model(model_name, max_tokens, context_window):
             model_name=model_name,
             tokenizer_name=model_name,
             max_new_tokens=max_tokens,
-            context_window=2048,   # Smaller window for OpenBio
+            context_window=context_window,
             model_kwargs={
                 "offload_folder": offload_path,   
                 "trust_remote_code": True

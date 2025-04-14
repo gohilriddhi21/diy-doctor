@@ -1,0 +1,10 @@
+query_llm,judge_llm,faithfulness_avg,relevancy_avg
+meta-llama/llama-3.2-3b-instruct,meta-llama/llama-3.2-3b-instruct,0.7,0.5
+meta-llama/llama-3.2-3b-instruct,mistralai/mistral-7b-instruct,0.1,1.0
+meta-llama/llama-3.2-3b-instruct,qwen/qwen-turbo,0.0,0.8
+mistralai/mistral-7b-instruct,meta-llama/llama-3.2-3b-instruct,0.6,0.5
+mistralai/mistral-7b-instruct,mistralai/mistral-7b-instruct,0.8,1.0
+mistralai/mistral-7b-instruct,qwen/qwen-turbo,0.3,1.0
+qwen/qwen-turbo,meta-llama/llama-3.2-3b-instruct,0.6,0.5
+qwen/qwen-turbo,mistralai/mistral-7b-instruct,0.7,1.0
+qwen/qwen-turbo,qwen/qwen-turbo,0.4,1.0

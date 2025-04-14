@@ -132,6 +132,13 @@ class QueryEngine:
                   "fusion\n")
         pass
 
+    def get_retriever(self):
+        """
+        Returns the retriever being used by the query engine
+        :return: The retriever object being used by the query engine
+        """
+        return self._retriever
+
     def _get_base_retriever(self, similarity_top_k=1):
         """
         Creates a base retriever object

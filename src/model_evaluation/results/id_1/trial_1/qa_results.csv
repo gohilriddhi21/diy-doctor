@@ -1,4 +1,4 @@
 query_llm,mrr,hit_rate,precision,recall
-meta-llama/llama-3.2-3b-instruct,0.5833333333333333,1.0,0.25,1.0
-mistralai/mistral-7b-instruct,0.875,1.0,0.25,1.0
-qwen/qwen-turbo,0.875,1.0,0.25,1.0
+meta-llama/llama-3.2-3b-instruct,0.5625,1.0000,0.2500,1.0000
+mistralai/mistral-7b-instruct,0.8333,1.0000,0.2500,1.0000
+qwen/qwen-turbo,0.8750,1.0000,0.2500,1.0000

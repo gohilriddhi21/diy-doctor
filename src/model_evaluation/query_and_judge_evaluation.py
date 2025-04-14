@@ -74,6 +74,9 @@ def evaluate_query(query, query_engine, judge_llm):
     :param judge_llm:    The judge LLM to evaluate the faithfulness/relevancy of the response
     :return: The evaluation scores for the query
     """
+    # Query start time
+    query_start = time.time()
+
     # Get the full response
     response = query_engine.generate_full_response(query)
 
@@ -85,13 +88,18 @@ def evaluate_query(query, query_engine, judge_llm):
     faithfulness_score = judge_llm.evaluate_faithfulness(response)
     relevancy_score = judge_llm.evaluate_relevancy(query, response)
 
+    # Query response end time
+    query_end = time.time()
+    full_response_time = query_end - query_start
+
     # Create a dictionary of the results from the query
     response_evaluation = {
         "query": query,
         "response": response_text,
         "context": response_context,
         "faithfulness": faithfulness_score,
-        "relevancy": relevancy_score
+        "relevancy": relevancy_score,
+        "full_response_time": full_response_time
     }
 
     return response_evaluation
@@ -143,9 +151,10 @@ def evaluate_model_pairs(patient_id, query_questions, output_dir):
 
     # Create empty dataframe for query responses
     query_responses_full = pd.DataFrame(columns=["query_llm", "judge_llm", "query", "response", "context",
-                                                 "faithfulness", "relevancy"])
+                                                 "faithfulness", "relevancy", "full_response_time"])
 
-    query_responses_avg = pd.DataFrame(columns=["query_llm", "judge_llm", "faithfulness_avg", "relevancy_avg"])
+    query_responses_avg = pd.DataFrame(columns=["query_llm", "judge_llm", "faithfulness_avg", "relevancy_avg",
+                                                "avg_response_time"])
 
     # Create empty dataframe for qa results
     qa_results = pd.DataFrame(columns=["query_llm", "mrr", "hit_rate", "precision", "recall"])
@@ -165,10 +174,12 @@ def evaluate_model_pairs(patient_id, query_questions, output_dir):
             # Evaluate each query
             faithfulness_sum = 0
             relevancy_sum = 0
+            query_time_sums = 0
             for query in query_questions:
                 query_evaluation = evaluate_query(query, query_engine, judge_llm)
                 faithfulness_sum += query_evaluation['faithfulness']
                 relevancy_sum += query_evaluation['relevancy']
+                query_time_sums += query_evaluation['full_response_time']
                 query_evaluation["query_llm"] = query_model_name
                 query_evaluation["judge_llm"] = judge_model_name
                 query_responses_full.loc[len(query_responses_full)] = query_evaluation
@@ -176,19 +187,22 @@ def evaluate_model_pairs(patient_id, query_questions, output_dir):
             # Get the averages and create dictionary
             faithfulness_avg = faithfulness_sum / len(query_questions)
             relevancy_avg = relevancy_sum / len(query_questions)
+            avg_response_time = query_time_sums / len(query_questions)
+
             avg_dictionary = {
                 "query_llm": query_model_name,
                 "judge_llm": judge_model_name,
                 "faithfulness_avg": faithfulness_avg,
-                "relevancy_avg": relevancy_avg
+                "relevancy_avg": relevancy_avg,
+                "avg_response_time": avg_response_time
             }
 
             # Add to dataframe of averages
             query_responses_avg.loc[len(query_responses_avg)] = avg_dictionary
 
             # Save results to csv
-            query_responses_full.to_csv(output_dir + os.sep + "query_results_full.csv", index=False)
-            query_responses_avg.to_csv(output_dir + os.sep + "query_results_avg.csv", index=False)
+            query_responses_full.to_csv(output_dir + os.sep + "query_results_full.csv", index=False, float_format='%.4f')
+            query_responses_avg.to_csv(output_dir + os.sep + "query_results_avg.csv", index=False, float_format='%.4f')
 
         # Get the question-answer results of the evaluation dataset
         print("Generating QA metrics for {}".format(query_model_name))
@@ -196,7 +210,7 @@ def evaluate_model_pairs(patient_id, query_questions, output_dir):
         qa_results.loc[len(qa_results)] = qa_eval_dict
 
         # Save the results to csv
-        qa_results.to_csv(output_dir + os.sep + "qa_results.csv", index=False)
+        qa_results.to_csv(output_dir + os.sep + "qa_results.csv", index=False, float_format='%.4f')
 
 
 def main(argv):

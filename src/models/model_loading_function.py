@@ -11,19 +11,19 @@ from llama_index.llms.openrouter import OpenRouter
 # Set model names
 MODEL_NAMES = [
     "aaditya/Llama3-OpenBioLLM-8B",
+    "Henrychur/MMed-Llama-3-8B",
     "meta-llama/llama-3.2-3b-instruct",
     "mistralai/mistral-7b-instruct",
     "qwen/qwen-turbo",
-    "Henrychur/MMed-Llama-3-8B",
     "bigcode/starcoder2-7b"
 ]
 
 # Set model access indexes
 OPENBIO_INDEX = 0
-META_LLAMA_INDEX = 1
-MISTRAL_INDEX = 2
-QWEN_INDEX = 3
-MMED_LLAMA_INDEX = 4
+MMED_LLAMA_INDEX = 1
+META_LLAMA_INDEX = 2
+MISTRAL_INDEX = 3
+QWEN_INDEX = 4
 STARCODER2_INDEX = 5
 
 
@@ -39,6 +39,9 @@ def load_llm(model_name, max_tokens=512, context_window=4096):
     if model_name == MODEL_NAMES[OPENBIO_INDEX]:
         return _load_hugging_face_model(model_name, max_tokens, context_window=2048)
 
+    elif model_name == MODEL_NAMES[MMED_LLAMA_INDEX]:
+        return _load_hugging_face_model(model_name, max_tokens, context_window=2048)
+
     elif model_name == MODEL_NAMES[META_LLAMA_INDEX]:
         return _load_openrouter_model(model_name, max_tokens, context_window)
 
@@ -47,9 +50,6 @@ def load_llm(model_name, max_tokens=512, context_window=4096):
 
     elif model_name == MODEL_NAMES[QWEN_INDEX]:
         return _load_openrouter_model(model_name, max_tokens, context_window)
-
-    elif model_name == MODEL_NAMES[MMED_LLAMA_INDEX]:
-        return _load_hugging_face_model(model_name, max_tokens, context_window=2048)
 
     elif model_name == MODEL_NAMES[STARCODER2_INDEX]:
         return _load_hugging_face_model(model_name, max_tokens, context_window=2048)

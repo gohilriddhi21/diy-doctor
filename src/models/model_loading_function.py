@@ -49,7 +49,7 @@ def load_llm(model_name, max_tokens=512, context_window=4096):
         return _load_openrouter_model(model_name, max_tokens, context_window)
 
     elif model_name == MODEL_NAMES[MMED_LLAMA_INDEX]:
-        return _load_hugging_face_model(model_name, max_tokens, context_window=1024)
+        return _load_hugging_face_model(model_name, max_tokens, context_window=2048)
 
     elif model_name == MODEL_NAMES[STARCODER2_INDEX]:
         return _load_hugging_face_model(model_name, max_tokens, context_window=2048)

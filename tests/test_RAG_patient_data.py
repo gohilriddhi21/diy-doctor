@@ -27,7 +27,7 @@ def main(argv):
     nodes = node_manager.get_nodes()
 
     # Run test query
-    model_name = "bigcode/starcoder2-7b"
+    model_name = "meta-llama/llama-3.2-3b-instruct"
     query_engine = QueryEngine(model_name, nodes)
     query = "What is the patient's father medical history?"
     print(query_engine.get_llm().complete("To infinity, and"))

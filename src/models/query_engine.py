@@ -17,8 +17,7 @@ class QueryEngine:
     """
     Class to manage base queries and responses
     """
-    def __init__(self, llm_model_name, nodes, embed_model_name="sentence-transformers/all-MiniLM-L6-v2",
-                 max_tokens=512, context_window=4096):
+    def __init__(self, llm_model_name, nodes, embed_model_name="sentence-transformers/all-MiniLM-L6-v2"):
         # Set defaults for variables necessary to generate retrievals
         # Set index and nodes
         self._nodes = nodes
@@ -34,7 +33,7 @@ class QueryEngine:
         Settings.embed_model = self._embed_model
 
         # Set LLM
-        self._llm = load_llm(llm_model_name, max_tokens, context_window)
+        self._llm = load_llm(llm_model_name)
         Settings.llm = self._llm
 
         # Set message for when queries/settings are attempted without nodes and LLM

@@ -27,32 +27,30 @@ QWEN_INDEX = 4
 STARCODER2_INDEX = 5
 
 
-def load_llm(model_name, max_tokens=512, context_window=4096):
+def load_llm(model_name):
     """
     Loads a model from the model name
     :param model_name: The name of the model to load. Note that it must be in the defined "models->router" dictionary
-    :param max_tokens:     The maximum number of tokens the model can generate in response
-    :param context_window: Size of the context the model can pull from
     :return: A loaded LLM object
     """
     # Valid load cases
     if model_name == MODEL_NAMES[OPENBIO_INDEX]:
-        return _load_hugging_face_model(model_name, max_tokens, context_window=2048)
+        return _load_hugging_face_model(model_name, max_tokens=512, context_window=2048)
 
     elif model_name == MODEL_NAMES[MMED_LLAMA_INDEX]:
-        return _load_hugging_face_model(model_name, max_tokens, context_window=2048)
+        return _load_hugging_face_model(model_name, max_tokens=512, context_window=2048)
 
     elif model_name == MODEL_NAMES[META_LLAMA_INDEX]:
-        return _load_openrouter_model(model_name, max_tokens, context_window)
+        return _load_openrouter_model(model_name, max_tokens=512, context_window=4096)
 
     elif model_name == MODEL_NAMES[MISTRAL_INDEX]:
-        return _load_openrouter_model(model_name, max_tokens, context_window)
+        return _load_openrouter_model(model_name, max_tokens=512, context_window=4096)
 
     elif model_name == MODEL_NAMES[QWEN_INDEX]:
-        return _load_openrouter_model(model_name, max_tokens, context_window)
+        return _load_openrouter_model(model_name, max_tokens=512, context_window=4096)
 
     elif model_name == MODEL_NAMES[STARCODER2_INDEX]:
-        return _load_hugging_face_model(model_name, max_tokens, context_window=2048)
+        return _load_hugging_face_model(model_name, max_tokens=512, context_window=2048)
 
     # Error case where model name is invalid
     else:

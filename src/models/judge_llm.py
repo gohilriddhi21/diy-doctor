@@ -12,8 +12,8 @@ class JudgeLLM:
     """
     Class to provide shared functionality to child judge LLM classes that provide specific implementations
     """
-    def __init__(self, model_name, max_tokens=512, context_window=4096):
-        self.judge_llm = load_llm(model_name, max_tokens, context_window)
+    def __init__(self, model_name):
+        self.judge_llm = load_llm(model_name)
 
     def evaluate_faithfulness(self, response_obj):
         """

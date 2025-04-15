@@ -160,9 +160,7 @@ def evaluate_model_pairs(patient_id, query_questions, output_dir):
     qa_results = pd.DataFrame(columns=["query_llm", "mrr", "hit_rate", "precision", "recall"])
 
     # Create a query engine and judge using the correct names for this pass
-    QUERY_NAME = ["Henrychur/MMed-Llama-3-8B"] # TODO remove this - just to test script works
-    MODEL_NAMES = ["meta-llama/llama-3.2-3b-instruct", "mistralai/mistral-7b-instruct", "qwen/qwen-turbo", "bigcode/starcoder2-7b", "aaditya/Llama3-OpenBioLLM-8B"] # TODO remove this - just to test script works
-    for query_model_name in QUERY_NAME:
+    for query_model_name in MODEL_NAMES:
         query_engine = QueryEngine(query_model_name, patient_record_nodes)
 
         for judge_model_name in MODEL_NAMES:

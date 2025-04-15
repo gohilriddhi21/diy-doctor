@@ -8,14 +8,14 @@ import os
 from llama_index.llms.huggingface import HuggingFaceLLM
 from llama_index.llms.openrouter import OpenRouter
 
-
 # Set model names
 MODEL_NAMES = [
     "aaditya/Llama3-OpenBioLLM-8B",
     "meta-llama/llama-3.2-3b-instruct",
     "mistralai/mistral-7b-instruct",
     "qwen/qwen-turbo",
-    "Henrychur/MMed-Llama-3-8B"
+    "Henrychur/MMed-Llama-3-8B",
+    "bigcode/starcoder2-7b"
 ]
 
 # Set model access indexes
@@ -23,7 +23,8 @@ OPENBIO_INDEX = 0
 META_LLAMA_INDEX = 1
 MISTRAL_INDEX = 2
 QWEN_INDEX = 3
-MMED_LLAMA = 4
+MMED_LLAMA_INDEX = 4
+STARCODER2_INDEX = 5
 
 
 def load_llm(model_name, max_tokens=512, context_window=4096):
@@ -47,9 +48,11 @@ def load_llm(model_name, max_tokens=512, context_window=4096):
     elif model_name == MODEL_NAMES[QWEN_INDEX]:
         return _load_openrouter_model(model_name, max_tokens, context_window)
 
-    elif model_name == MODEL_NAMES[MMED_LLAMA]:
+    elif model_name == MODEL_NAMES[MMED_LLAMA_INDEX]:
         return _load_hugging_face_model(model_name, max_tokens, context_window=1024)
 
+    elif model_name == MODEL_NAMES[STARCODER2_INDEX]:
+        return _load_hugging_face_model(model_name, max_tokens, context_window=2048)
     # Error case where model name is invalid
     else:
         print("ERROR! Invalid model name. Please select a valid name from the list of pre-defined models")
@@ -85,7 +88,7 @@ def _load_hugging_face_model(model_name, max_tokens, context_window):
     """
     # Build path to 'offload' folder relative to this file's location
     offload_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), '..', '..', 'offload_{}'.format(model_name))
+        os.path.join(os.path.dirname(__file__), '..', '..', 'offload_{}'.format(model_name.replace("/", "_")))
     )
     os.makedirs(offload_path, exist_ok=True)  # Create it if missing
 

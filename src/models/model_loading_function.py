@@ -5,7 +5,7 @@
 
 
 import os
-from llama_index.llms.huggingface import HuggingFaceLLM
+from llama_index.llms.huggingface_api import HuggingFaceInferenceAPI
 from llama_index.llms.openrouter import OpenRouter
 
 # Set model names
@@ -85,20 +85,11 @@ def _load_hugging_face_model(model_name, max_tokens, context_window):
     :param context_window: Size of the context the model can pull from
     :return: Loaded LLM
     """
-    # Build path to 'offload' folder relative to this file's location
-    offload_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), '..', '..', 'offload_{}'.format(model_name.replace("/", "_")))
-    )
-    os.makedirs(offload_path, exist_ok=True)  # Create it if missing
-
-    llm = HuggingFaceLLM(
+    hugging_face_key = os.getenv("HUGGING_FACE_TOKEN")
+    llm = HuggingFaceInferenceAPI(
         model_name=model_name,
-        tokenizer_name=model_name,
+        token=hugging_face_key,
         max_new_tokens=max_tokens,
-        context_window=context_window,
-        model_kwargs={
-            "offload_folder": offload_path,
-            "trust_remote_code": True
-        }
+        context_window=context_window
     )
     return llm

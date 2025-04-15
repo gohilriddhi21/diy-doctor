@@ -30,7 +30,6 @@ def main(argv):
     model_name = "meta-llama/llama-3.2-3b-instruct"
     query_engine = QueryEngine(model_name, nodes)
     query = "What is the patient's father medical history?"
-    print(query_engine.get_llm().complete("To infinity, and"))
     print(query_engine.generate_response(query))
 
     # Close database connection

@@ -53,7 +53,7 @@ def load_llm(model_name, max_tokens=512, context_window=4096):
         return _load_hugging_face_model(model_name, max_tokens, context_window=1024)
     
     elif model_name == MODEL_NAMES[STARCODER2_INDEX]:
-        return _load_openrouter_model(model_name, max_tokens, context_window)
+        return _load_hugging_face_model(model_name, max_tokens, context_window)
     # Error case where model name is invalid
     else:
         print("ERROR! Invalid model name. Please select a valid name from the list of pre-defined models")

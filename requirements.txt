@@ -19,3 +19,4 @@ python-dotenv~=1.0.1
 stemmer~=0.0.4
 numpy~=2.2.4
 pandas~=2.2.3
+llama-cpp-python==0.3.8

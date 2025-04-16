@@ -42,7 +42,7 @@ def main():
     nodes = node_manager.get_nodes()
 
     # Run test query
-    model_name = "meta-llama/llama-3.2-3b-instruct"
+    model_name = "bigcode/starcoder2-7b"
     query_engine = QueryEngine(model_name, nodes)
 
     # Get judge model

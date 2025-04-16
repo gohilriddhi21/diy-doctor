@@ -1,0 +1,5 @@
+query_llm,judge_llm,faithfulness_avg,relevancy_avg,avg_response_time
+bigcode/starcoder2-7b,aaditya/Llama3-OpenBioLLM-8B,0.1000,0.4000,379.7403
+bigcode/starcoder2-7b,meta-llama/llama-3.2-3b-instruct,0.5000,0.5000,231.7996
+bigcode/starcoder2-7b,mistralai/mistral-7b-instruct,0.7000,0.8000,231.5088
+bigcode/starcoder2-7b,qwen/qwen-turbo,0.2000,0.4000,241.8926

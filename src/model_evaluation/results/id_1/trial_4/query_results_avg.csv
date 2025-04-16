@@ -1,0 +1,2 @@
+query_llm,judge_llm,faithfulness_avg,relevancy_avg,avg_response_time
+bigcode/starcoder2-7b,bigcode/starcoder2-7b,0.1000,0.3000,1230.0590

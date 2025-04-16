@@ -42,13 +42,16 @@ except Exception as e:
 users = db["login"]
 patient_dao = PatientDAO(db_connector)
 
-# Verify if a user's login credentials are correct
-# Params: 
-#  - username (str): The username of the user trying to log in.
-#  - password (str): The password provided by the user for login.
-# Returns:
-#  - bool: True if the username and password match a database entry, False otherwise.
+
 def verify_login(username, password):
+    '''Verify if a user's login credentials are correct
+    Params: 
+        username (str): The username of the user trying to log in.
+        password (str): The password provided by the user for login.
+    returns:
+        bool: True if the username and password match a database entry, 
+              False otherwise.
+    '''
     print(f"Logging in with username: {username} and password: {password}")
     user = users.find_one({"lower_username": username.lower()})
     if user:
@@ -78,7 +81,11 @@ def login_page():
             st.rerun()
         return  # Exit function early if logged in
 
-    st.image("testImage.jpg", use_container_width=True)
+    image_path = "src/ui/testImage.jpg"
+    if os.path.exists(image_path):
+        st.image(image_path, use_container_width=True)
+    else:
+        st.warning("Login image not found. Skipping display.")
 
     username = st.sidebar.text_input("Username")
     password = st.sidebar.text_input("Password", type="password")
@@ -87,7 +94,8 @@ def login_page():
 
     with login_col:
         if st.button("🔒 Login"):
-            user = verify_login(username, password)
+            with st.spinner("Verifying credentials..."):
+                user = verify_login(username, password)
             if user:
                 st.session_state['logged_in'] = True
                 st.session_state['username'] = username
@@ -142,7 +150,7 @@ def dashboard_page():
 
     try:
         with st.spinner('🔄 Loading AI models and patient records...'):
-            llm = load_llm(model_name)
+            load_llm(model_name)
 
             if not records:
                 st.error("❌ No patient records found for the given patient ID.")

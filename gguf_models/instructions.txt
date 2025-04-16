@@ -1,0 +1,4 @@
+Add GGUF (<file_name>.gguf) quantized versions of models to this directory. Paths below:
+aaditya/Llama3-OpenBioLLM-8B: https://huggingface.co/aaditya/OpenBioLLM-Llama3-8B-GGUF?show_file_info=openbiollm-llama3-8b.Q8_0.gguf
+Henrychur/MMed-Llama-3-8B: https://huggingface.co/wencan-lab/MMed-Llama-3-8B-Q4_K_M-GGUF?show_file_info=mmed-llama-3-8b-q4_k_m.gguf
+bigcode/starcoder2-7b: https://huggingface.co/DevQuasar/bigcode.starcoder2-7b-GGUF?show_file_info=bigcode.starcoder2-7b.Q8_0.gguf

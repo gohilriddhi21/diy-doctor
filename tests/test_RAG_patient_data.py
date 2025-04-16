@@ -8,6 +8,7 @@ from src.models.query_engine import QueryEngine
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+
 def main(argv):
     load_dotenv()
 

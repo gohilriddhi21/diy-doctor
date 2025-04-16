@@ -5,45 +5,57 @@
 
 
 import os
-from llama_index.llms.huggingface import HuggingFaceLLM
 from llama_index.llms.openrouter import OpenRouter
-
+from llama_index.llms.llama_cpp import LlamaCPP
 
 # Set model names
 MODEL_NAMES = [
     "aaditya/Llama3-OpenBioLLM-8B",
+    "Henrychur/MMed-Llama-3-8B",
     "meta-llama/llama-3.2-3b-instruct",
     "mistralai/mistral-7b-instruct",
-    "qwen/qwen-turbo"
+    "qwen/qwen-turbo",
+    "bigcode/starcoder2-7b"
 ]
 
 # Set model access indexes
 OPENBIO_INDEX = 0
-META_LLAMA_INDEX = 1
-MISTRAL_INDEX = 2
-QWEN_INDEX = 3
+MMED_LLAMA_INDEX = 1
+META_LLAMA_INDEX = 2
+MISTRAL_INDEX = 3
+QWEN_INDEX = 4
+STARCODER2_INDEX = 5
 
 
 def load_llm(model_name, max_tokens=512, context_window=4096):
     """
     Loads a model from the model name
-    :param model_name: The name of the model to load. Note that it must be in the defined "models->router" dictionary
+    :param model_name:     The name of the model to load. Note that it must be in the defined "models->router" dictionary
     :param max_tokens:     The maximum number of tokens the model can generate in response
     :param context_window: Size of the context the model can pull from
     :return: A loaded LLM object
     """
     # Valid load cases
     if model_name == MODEL_NAMES[OPENBIO_INDEX]:
-        return _load_hugging_face_model(model_name, max_tokens, context_window)
+        return _load_hugging_face_model(model_name=os.path.join("gguf_models", "openbiollm-llama3-8b.Q8_0.gguf"),
+                                        max_tokens=max_tokens, context_window=context_window)
+
+    elif model_name == MODEL_NAMES[MMED_LLAMA_INDEX]:
+        return _load_hugging_face_model(model_name=os.path.join("gguf_models", "mmed-llama-3-8b-q4_k_m.gguf"),
+                                        max_tokens=max_tokens, context_window=context_window)
 
     elif model_name == MODEL_NAMES[META_LLAMA_INDEX]:
-        return _load_openrouter_model(model_name, max_tokens, context_window)
+        return _load_openrouter_model(model_name, max_tokens=max_tokens, context_window=context_window)
 
     elif model_name == MODEL_NAMES[MISTRAL_INDEX]:
-        return _load_openrouter_model(model_name, max_tokens, context_window)
+        return _load_openrouter_model(model_name, max_tokens=max_tokens, context_window=context_window)
 
     elif model_name == MODEL_NAMES[QWEN_INDEX]:
-        return _load_openrouter_model(model_name, max_tokens, context_window)
+        return _load_openrouter_model(model_name, max_tokens=max_tokens, context_window=context_window)
+
+    elif model_name == MODEL_NAMES[STARCODER2_INDEX]:
+        return _load_hugging_face_model(model_name=os.path.join("gguf_models", "bigcode.starcoder2-7b.Q8_0.gguf"),
+                                        max_tokens=max_tokens, context_window=context_window)
 
     # Error case where model name is invalid
     else:
@@ -78,31 +90,9 @@ def _load_hugging_face_model(model_name, max_tokens, context_window):
     :param context_window: Size of the context the model can pull from
     :return: Loaded LLM
     """
-    if model_name == MODEL_NAMES[OPENBIO_INDEX]:
-        # Build path to 'offload' folder relative to this file's location
-        offload_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), '..', '..', 'offload')
-        )
-        os.makedirs(offload_path, exist_ok=True)  # Create it if missing
-
-        llm = HuggingFaceLLM(
-            model_name=model_name,
-            tokenizer_name=model_name,
-            max_new_tokens=max_tokens,
-            context_window=2048,   # Smaller window for OpenBio
-            model_kwargs={
-                "offload_folder": offload_path,   
-                "trust_remote_code": True
-            }
-        )
-    else:
-        llm = HuggingFaceLLM(
-            model_name=model_name,
-            tokenizer_name=model_name,
-            max_new_tokens=max_tokens,
-            context_window=context_window,
-            model_kwargs={
-                "trust_remote_code": True
-            }
-        )
+    llm = LlamaCPP(
+        model_path=model_name,
+        max_new_tokens=max_tokens,
+        context_window=context_window,
+    )
     return llm

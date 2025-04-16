@@ -164,6 +164,10 @@ def evaluate_model_pairs(patient_id, query_questions, output_dir):
         query_engine = QueryEngine(query_model_name, patient_record_nodes)
 
         for judge_model_name in MODEL_NAMES:
+            # Prevent same-same comparisons
+            if judge_model_name == query_model_name:
+                continue
+
             # Start message
             print("Starting evaluation for query model: {}, judge model: {}".format(query_model_name, judge_model_name))
 

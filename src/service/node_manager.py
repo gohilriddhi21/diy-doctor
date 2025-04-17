@@ -40,23 +40,6 @@ class NodeManager:
         """
         self._nodes = None
 
-    def set_nodes_from_pdf(self, document_path):
-        """
-        Sets nodes from a PDF document
-        :param document_path: Path to the PDF document
-        :return: None
-        """
-        # Start message
-        start_time = int(round(time.time()))
-        print("Processing document data from {}... ".format(document_path))
-
-        self._documents = self._process_pdf_document_data(document_path)
-        self._nodes = self._pipeline.run(documents=self._documents)
-
-        # Completion message
-        end_time = int(round(time.time()))
-        print("Finished! Extracted {} nodes in {} seconds.\n".format(len(self._nodes), end_time - start_time))
-
     def set_nodes_from_patient_data(self, patient_records):
         """
         Sets nodes from a list of patient records

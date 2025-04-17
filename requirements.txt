@@ -8,7 +8,6 @@ transformers==4.50.3
 sentence-transformers==4.0.1
 llama-index-llms-huggingface==0.4.2
 llama-index-embeddings-huggingface==0.5.2
-pdfplumber==0.11.6
 llama-index-llms-openrouter==0.3.1
 llama-index-retrievers-bm25==0.5.2
 tabula-py==2.10.0

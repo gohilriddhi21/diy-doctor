@@ -23,7 +23,7 @@ An innovative application designed to streamline medical verification and provid
    cd src/ui/
    ```
 
-3. Add a file titled '.env' to the directory containing 'app.py' that includes the following information:
+3. Export the below variable in your system environment, or add it in .env file inside the `src/ui/` directory. 
    ```bash
       OPENROUTER_API_KEY=<YOUR_KEY_HERE>
    ```
@@ -50,9 +50,12 @@ An innovative application designed to streamline medical verification and provid
    streamlit run DIYDoctorUI.py
    ```
 
-
 5. If you ever run into an issue like a code file not being found, it is probably an issue with your working directory. All programs/scripts in this repository expect your working directory to be the repository's root directory, e.g. "../diy-doctor" and that you have a .env file in the directory.
+
+6. Quick Tip: 
+   Testing credentails: 
+      `username`: booby 
+      `password`: password
 
 ## Important Links
 - MongoDB: https://cloud.mongodb.com/v2/67d8b43aed149a23f0a54c5c#/metrics/replicaSet/67d8b569b6a2d65fd34b1ce6/explorer/sample_mflix/comments/find
-- 

@@ -40,10 +40,8 @@ An innovative application designed to streamline medical verification and provid
    - **Henrychur/MMed-Llama-3-8B:** https://huggingface.co/wencan-lab/MMed-Llama-3-8B-Q4_K_M-GGUF?show_file_info=mmed-llama-3-8b-q4_k_m.gguf
    - **bigcode/starcoder2-7b:** https://huggingface.co/DevQuasar/bigcode.starcoder2-7b-GGUF?show_file_info=bigcode.starcoder2-7b.Q8_0.gguf
 
-4. To run the program locally, use the following command in the base directory ("../diy-doctor"):
-```
-streamlit run src/app.py
-```
+4. To run the program locally <TODO: FILL THIS OUT>
+
 
 5. If you ever run into an issue like a code file not being found, it is probably an issue with your working directory. All programs/scripts in this repository expect your working directory to be the repository's base directory, e.g. "../diy-doctor"
 

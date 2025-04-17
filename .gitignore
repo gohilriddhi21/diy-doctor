@@ -176,3 +176,6 @@ src/__pycache__
 
 # Hugging Face / LLM offloading
 offload/
+
+# Model files
+gguf_models

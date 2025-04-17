@@ -17,9 +17,13 @@ An innovative application designed to streamline medical verification and provid
    ```bash
    git clone git@github.com:gohilriddhi21/diy-doctor.git
    ```
-   
 
-2. Add a file titled '.env' to the directory containing 'app.py' that includes the following information:
+2. Go inside the src/ui directory. 
+   ```
+   cd src/ui/
+   ```
+
+3. Add a file titled '.env' to the directory containing 'app.py' that includes the following information:
    ```bash
       OPENROUTER_API_KEY=<YOUR_KEY_HERE>
    ```
@@ -41,7 +45,10 @@ An innovative application designed to streamline medical verification and provid
    - **bigcode/starcoder2-7b:** https://huggingface.co/DevQuasar/bigcode.starcoder2-7b-GGUF?show_file_info=bigcode.starcoder2-7b.Q8_0.gguf
 
 
-4. To run the program locally <TODO: FILL THIS OUT>
+4. To run the program locally
+   ```
+   streamlit run DIYDoctorUI.py
+   ```
 
 
 5. If you ever run into an issue like a code file not being found, it is probably an issue with your working directory. All programs/scripts in this repository expect your working directory to be the repository's root directory, e.g. "../diy-doctor" and that you have a .env file in the directory.

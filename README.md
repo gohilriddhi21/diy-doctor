@@ -43,7 +43,7 @@ An innovative application designed to streamline medical verification and provid
 4. To run the program locally <TODO: FILL THIS OUT>
 
 
-5. If you ever run into an issue like a code file not being found, it is probably an issue with your working directory. All programs/scripts in this repository expect your working directory to be the repository's base directory, e.g. "../diy-doctor"
+5. If you ever run into an issue like a code file not being found, it is probably an issue with your working directory. All programs/scripts in this repository expect your working directory to be the repository's base directory, e.g. "../diy-doctor" and that you have a .env file in the directory.
 
 ## Important Links
 - MongoDB: https://cloud.mongodb.com/v2/67d8b43aed149a23f0a54c5c#/metrics/replicaSet/67d8b569b6a2d65fd34b1ce6/explorer/sample_mflix/comments/find

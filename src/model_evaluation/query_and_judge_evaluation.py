@@ -160,11 +160,14 @@ def evaluate_model_pairs(patient_id, query_questions, output_dir):
     qa_results = pd.DataFrame(columns=["query_llm", "mrr", "hit_rate", "precision", "recall"])
 
     # Create a query engine and judge using the correct names for this pass
-    #MODEL_NAMES = ["meta-llama/llama-3.2-3b-instruct", "mistralai/mistral-7b-instruct", "qwen/qwen-turbo"] # TODO remove this - just to test script works
     for query_model_name in MODEL_NAMES:
         query_engine = QueryEngine(query_model_name, patient_record_nodes)
 
         for judge_model_name in MODEL_NAMES:
+            # Prevent same-same comparisons
+            if judge_model_name == query_model_name:
+                continue
+
             # Start message
             print("Starting evaluation for query model: {}, judge model: {}".format(query_model_name, judge_model_name))
 

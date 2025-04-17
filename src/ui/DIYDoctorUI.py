@@ -190,7 +190,7 @@ def dashboard_page():
         'Meta Llama': 'meta-llama/llama-3.2-3b-instruct',
         'Mistral': 'mistralai/mistral-7b-instruct',
         'Qwen Turbo': 'qwen/qwen-turbo',
-        'StarCoder2': 'bigcode/starcoder2-7b '
+        'StarCoder2': 'bigcode/starcoder2-7b'
     }
 
     st.title(f"Welcome {st.session_state['username']}!")

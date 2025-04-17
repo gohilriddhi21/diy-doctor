@@ -26,7 +26,6 @@ MISTRAL_INDEX = 3
 QWEN_INDEX = 4
 STARCODER2_INDEX = 5
 
-
 def load_llm(model_name, max_tokens=512, context_window=4096):
     """
     Loads a model from the model name
@@ -56,7 +55,7 @@ def load_llm(model_name, max_tokens=512, context_window=4096):
     elif model_name == MODEL_NAMES[STARCODER2_INDEX]:
         return _load_hugging_face_model(model_name=os.path.join("gguf_models", "bigcode.starcoder2-7b.Q8_0.gguf"),
                                         max_tokens=max_tokens, context_window=context_window)
-
+     
     # Error case where model name is invalid
     else:
         print("ERROR! Invalid model name. Please select a valid name from the list of pre-defined models")

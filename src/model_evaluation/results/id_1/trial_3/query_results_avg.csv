@@ -1,0 +1,5 @@
+query_llm,judge_llm,faithfulness_avg,relevancy_avg,avg_response_time
+aaditya/Llama3-OpenBioLLM-8B,aaditya/Llama3-OpenBioLLM-8B,0.3000,0.4000,170.1127
+aaditya/Llama3-OpenBioLLM-8B,meta-llama/llama-3.2-3b-instruct,0.7000,0.3000,17.2669
+aaditya/Llama3-OpenBioLLM-8B,mistralai/mistral-7b-instruct,0.5000,0.8000,12.5104
+aaditya/Llama3-OpenBioLLM-8B,qwen/qwen-turbo,0.2000,0.5000,13.3095

@@ -1,5 +1,0 @@
-query_llm,judge_llm,faithfulness_avg,relevancy_avg,avg_response_time
-Henrychur/MMed-Llama-3-8B,aaditya/Llama3-OpenBioLLM-8B,0.2000,0.3000,294.7962
-Henrychur/MMed-Llama-3-8B,meta-llama/llama-3.2-3b-instruct,0.4000,0.4000,227.5007
-Henrychur/MMed-Llama-3-8B,mistralai/mistral-7b-instruct,0.7000,0.8000,227.0803
-Henrychur/MMed-Llama-3-8B,qwen/qwen-turbo,0.3000,0.4000,228.1944

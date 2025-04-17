@@ -50,11 +50,9 @@ An innovative application designed to streamline medical verification and provid
    streamlit run DIYDoctorUI.py
    ```
 
-5. If you ever run into an issue like a code file not being found, it is probably an issue with your working directory. All programs/scripts in this repository expect your working directory to be the repository's root directory, e.g. "../diy-doctor" and that you have a .env file in the directory.
-
-6. Quick Tip: 
-   Testing credentails: 
-      `username`: booby 
+5. Quick Tip: 
+   Testing credentials: 
+      `username`: bobby 
       `password`: password
 
 ## Important Links

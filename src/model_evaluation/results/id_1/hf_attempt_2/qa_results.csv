@@ -1,0 +1,7 @@
+query_llm,mrr,hit_rate,precision,recall
+aaditya/Llama3-OpenBioLLM-8B,0.8125,1.0000,0.2500,1.0000
+Henrychur/MMed-Llama-3-8B,0.5208,1.0000,0.2500,1.0000
+meta-llama/llama-3.2-3b-instruct,0.5833,1.0000,0.2500,1.0000
+mistralai/mistral-7b-instruct,0.8750,1.0000,0.2500,1.0000
+qwen/qwen-turbo,0.8750,1.0000,0.2500,1.0000
+bigcode/starcoder2-7b,0.5208,1.0000,0.2500,1.0000

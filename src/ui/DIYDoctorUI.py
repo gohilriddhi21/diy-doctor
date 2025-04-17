@@ -11,7 +11,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 
 from src.models.query_engine import QueryEngine
 from src.models.judge_llm import JudgeLLM
-from src.models.model_loading_function import load_llm
 from src.service.node_manager import NodeManager
 from src.backend.database.PatientDAO import PatientDAO
 from src.backend.database.MongoDBConnector import MongoDBConnector
@@ -224,7 +223,6 @@ def dashboard_page():
 
     try:
         with st.spinner('🔄 Loading AI models and patient records...'):
-            llm = load_llm(model_name)
 
             if not records:
                 st.error("❌ No patient records found for the given patient ID.")
@@ -249,14 +247,11 @@ def dashboard_page():
             # Initialize progress bar
             progress = st.progress(0, text="Analyzing your query...")
 
-            # Simulate progress (optional: fake small loading for realism)
-            for percent_complete in range(0, 100, 10):
-                progress.progress(percent_complete + 10)
-                import time
-                time.sleep(0.05)
-
+            # Get query and response
             response_obj = query_engine.generate_full_response(user_query)
+            progress.progress(50)
             verification = judge.verify_suggestions(user_query, response_obj, verbose=True)
+            progress.progress(100)
 
             # Remove progress bar after done
             progress.empty()

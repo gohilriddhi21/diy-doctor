@@ -26,6 +26,7 @@ MISTRAL_INDEX = 3
 QWEN_INDEX = 4
 STARCODER2_INDEX = 5
 
+
 def load_llm(model_name, max_tokens=512, context_window=4096):
     """
     Loads a model from the model name
@@ -36,11 +37,11 @@ def load_llm(model_name, max_tokens=512, context_window=4096):
     """
     # Valid load cases
     if model_name == MODEL_NAMES[OPENBIO_INDEX]:
-        return _load_hugging_face_model(model_name=os.path.join("../../gguf_models", "openbiollm-llama3-8b.Q8_0.gguf"),
+        return _load_hugging_face_model(model_name="openbiollm-llama3-8b.Q8_0.gguf",
                                         max_tokens=max_tokens, context_window=context_window)
 
     elif model_name == MODEL_NAMES[MMED_LLAMA_INDEX]:
-        return _load_hugging_face_model(model_name=os.path.join("../../gguf_models", "mmed-llama-3-8b-q4_k_m.gguf"),
+        return _load_hugging_face_model(model_name="mmed-llama-3-8b-q4_k_m.gguf",
                                         max_tokens=max_tokens, context_window=context_window)
 
     elif model_name == MODEL_NAMES[META_LLAMA_INDEX]:
@@ -53,7 +54,7 @@ def load_llm(model_name, max_tokens=512, context_window=4096):
         return _load_openrouter_model(model_name, max_tokens=max_tokens, context_window=context_window)
 
     elif model_name == MODEL_NAMES[STARCODER2_INDEX]:
-        return _load_hugging_face_model(model_name=os.path.join("../../gguf_models", "bigcode.starcoder2-7b.Q8_0.gguf"),
+        return _load_hugging_face_model(model_name="bigcode.starcoder2-7b.Q8_0.gguf",
                                         max_tokens=max_tokens, context_window=context_window)
      
     # Error case where model name is invalid
@@ -89,9 +90,9 @@ def _load_hugging_face_model(model_name, max_tokens, context_window):
     :param context_window: Size of the context the model can pull from
     :return: Loaded LLM
     """
-    print(model_name)
+    model_path = os.path.join("..", "..", "gguf_models", model_name)
     llm = LlamaCPP(
-        model_path=model_name,
+        model_path=model_path,
         max_new_tokens=max_tokens,
         context_window=context_window,
     )

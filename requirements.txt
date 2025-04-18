@@ -19,4 +19,5 @@ stemmer~=0.0.4
 numpy~=2.2.4
 pandas~=2.2.3
 llama-cpp-python==0.3.8
+llama-index-llms-llama-cpp==0.4.0
 easyocr==1.7.2

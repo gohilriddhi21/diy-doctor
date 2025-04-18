@@ -75,14 +75,14 @@ The system uses a Retrieval-Augmented Generation (RAG) pipeline combined with du
 - **Backend Database**: MongoDB Atlas (stores patient records and user authentication)
 - **Semantic Embedding Model**: `sentence-transformers/all-MiniLM-L6-v2`
 - **Query Engine Models**: 
-  - Domain-specific: OpenBioLLM-8B, MMed-Llama-3-8B
-  - Generalist: Meta Llama-3.2-3B, Mistral-7B, Qwen-Turbo
-  - Out-of-domain: StarCoder2-7B
+  - Domain-specific: `OpenBioLLM-8B`, `MMed-Llama-3-8B`
+  - Generalist: `Meta Llama-3.2-3B`, `Mistral-7B`, `Qwen-Turbo`
+  - Out-of-domain: `StarCoder2-7B`
 - **Verification Models (Judge LLMs)**: Same model set used independently for evaluation
 - **Frontend**: Built with Streamlit
 
 ## Important Links
-- MongoDB: https://cloud.mongodb.com/v2/67d8b43aed149a23f0a54c5c#/metrics/replicaSet/67d8b569b6a2d65fd34b1ce6/explorer/sample_mflix/comments/find
+- [MongoDB Cloud Database](https://cloud.mongodb.com/v2/67d8b43aed149a23f0a54c5c#/metrics/replicaSet/67d8b569b6a2d65fd34b1ce6/explorer/sample_mflix/comments/find)
 
 ## Notes
 - If you want to run the model evaluation script "../src/model_evaluation/query_and_judge_evaluation.py", make sure your working directory is the "../diy-doctor" folder, or you may run into file path issues.

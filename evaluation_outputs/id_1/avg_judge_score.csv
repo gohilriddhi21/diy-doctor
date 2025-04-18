@@ -1,0 +1,7 @@
+judge_model,faithfulness,relevancy
+aaditya/Llama3-OpenBioLLM-8B,0.38,0.52
+Henrychur/MMed-Llama-3-8B,0.34,0.24
+meta-llama/llama-3.2-3b-instruct,0.72,0.52
+mistralai/mistral-7b-instruct,0.5,0.86
+qwen/qwen-turbo,0.3,0.66
+bigcode/starcoder2-7b,0.7,0.46

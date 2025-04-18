@@ -1,7 +1,6 @@
 # DIY Doctor: A GenAI-Powered Personal Health Assistant
 
-DIY Doctor is a GenAI-powered personal health assistant that enables users to securely query their own medical records and receive personalised, context-aware responses.  
-The system uses a Retrieval-Augmented Generation (RAG) pipeline combined with dual-Large Language Models (LLMS) to generate and verify medical advice grounded in individual patient data.
+DIY Doctor is a GenAI-powered personal health assistant that enables users to securely query their own medical records and receive personalised, context-aware responses. The system uses a Retrieval-Augmented Generation (RAG) pipeline combined with dual-Large Language Models (LLMS) to generate and verify medical advice grounded in individual patient data.
   
 ## Getting Started
 1. **Clone the repository**:

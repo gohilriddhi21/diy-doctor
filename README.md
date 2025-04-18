@@ -1,17 +1,8 @@
-# Diy-doctor
-An innovative application designed to streamline medical verification and provide personalised health suggestions.
+# DIY Doctor: A GenAI-Powered Personal Health Assistant
 
-## Features
-- **Medical Verification**: 
-- **Personalized Health Suggestions**: 
-
-## Technologies Used
-- Python
-- Streamlit
-- OpenAI API
-- Hugging Face
-- LLama Index
-
+DIY Doctor is a GenAI-powered personal health assistant that enables users to securely query their own medical records and receive personalised, context-aware responses.  
+The system uses a Retrieval-Augmented Generation (RAG) pipeline combined with dual-Large Language Models (LLMS) to generate and verify medical advice grounded in individual patient data.
+  
 ## Getting Started
 1. Clone the repository:
    ```bash
@@ -50,10 +41,40 @@ An innovative application designed to streamline medical verification and provid
    streamlit run DIYDoctorUI.py
    ```
 
-5. Quick Tip: 
-   Testing credentials: 
-      `username`: bobby 
+5. **Quick Tip**:
+
+   Testing credentials:
+
+      `username`: bobby
       `password`: password
+
+
+## ✨ Key Features
+- **Secure User Authentication**: Private login using username/password and OCR-based ID verification.
+- **Retrieval-Augmented Generation (RAG)**: Semantic search over patient-specific medical records.
+- **Dual LLM Architecture**: 
+  - **Query LLM** generates health advice.
+  - **Judge LLM** independently verifies response faithfulness and relevance.
+- **Veracity Scoring System**: Categorises responses as `GOOD`, `VERIFY`, or `BAD` for user guidance.
+- **Interactive Streamlit Dashboard**: User-friendly web interface for querying and viewing judged responses.
+
+## Technologies Used
+- Python
+- Streamlit
+- OpenAI API
+- Hugging Face
+- LLama Index
+
+## 🏗️ System Architecture
+
+- **Backend Database**: MongoDB Atlas (stores patient records and user authentication)
+- **Semantic Embedding Model**: `sentence-transformers/all-MiniLM-L6-v2`
+- **Query Engine Models**: 
+  - Domain-specific: OpenBioLLM-8B, MMed-Llama-3-8B
+  - Generalist: Meta Llama-3.2-3B, Mistral-7B, Qwen-Turbo
+  - Out-of-domain: StarCoder2-7B
+- **Verification Models (Judge LLMs)**: Same model set used independently for evaluation
+- **Frontend**: Built with Streamlit
 
 ## Important Links
 - MongoDB: https://cloud.mongodb.com/v2/67d8b43aed149a23f0a54c5c#/metrics/replicaSet/67d8b569b6a2d65fd34b1ce6/explorer/sample_mflix/comments/find

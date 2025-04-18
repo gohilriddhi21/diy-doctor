@@ -1,9 +1,3 @@
-# David Treadwell
-# CS 7180 - Generative AI
-# treadwell.d@northeastern.edu
-# judge_llm.py - Contains a class to manage functionality for judge LLM
-
-
 from src.models.model_loading_function import load_llm
 from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 

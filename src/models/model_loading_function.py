@@ -1,9 +1,3 @@
-# David Treadwell
-# CS 7180 - Generative AI
-# treadwell.d@northeastern.edu
-# model_loading_function.py - Function to properly load (pre-defined) LLM models for use throughout project
-
-
 import os
 from llama_index.llms.openrouter import OpenRouter
 from llama_index.llms.llama_cpp import LlamaCPP

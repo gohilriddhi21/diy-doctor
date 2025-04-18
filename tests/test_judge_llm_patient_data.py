@@ -1,5 +1,3 @@
-import os
-import sys
 from src.service.node_manager import NodeManager
 from dotenv import load_dotenv
 from src.models.query_engine import QueryEngine

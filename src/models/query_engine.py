@@ -1,8 +1,3 @@
-# David Treadwell
-# CS 7180 - Generative AI
-# treadwell.d@northeastern.edu
-# query_engine.py - Class to manage querying
-
 from llama_index.core import VectorStoreIndex, Settings
 from llama_index.core.retrievers import AutoMergingRetriever
 from llama_index.retrievers.bm25 import BM25Retriever

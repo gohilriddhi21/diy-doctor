@@ -103,7 +103,9 @@ def find_user_by_name(name):
     """
     Search MongoDB 'login' collection for a matching user based on name.
     """
-    query = {"lower_username": name.lower()}
+    first_name = name.split(" ")[0]
+    print("FIRST NAME EXTRACTED FROM OCR", first_name)
+    query = {"lower_username": first_name.lower()}
     user = users.find_one(query)
     return user
 
